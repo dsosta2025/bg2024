@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "594022855564",
+    "project_id": "bima-gyaan-2025",
+    "storage_bucket": "bima-gyaan-2025.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594022855564:android:87d0759be3f3af47e6dca9",
+        "android_client_info": {
+          "package_name": "com.example.bima_gyaan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARx0EbslTfhVhkW4Am-_DzUvJNGYaxStg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
