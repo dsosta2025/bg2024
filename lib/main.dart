@@ -1,4 +1,5 @@
 import 'package:bima_gyaan/pages/login_screen/screen/login_screen.dart';
+import 'package:bima_gyaan/pages/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -46,7 +47,7 @@ class _MyAppState extends State<MyApp> {
 
       routes: {
         // SplashScreen.routeName: (context) => const SplashScreen(),
-        LoginScreen.routeName: (context) => const LoginScreen(),
+        LoginScreen.routeName: (context) =>  LoginScreen(),
         //CreateAccountScreen.routeName: (context) => const CreateAccountScreen(),
         //SignUpPage.routeName: (context) => const SignUpPage(),
         //ForgetPasswordScreen.routeName: (context) => const ForgetPasswordScreen(),

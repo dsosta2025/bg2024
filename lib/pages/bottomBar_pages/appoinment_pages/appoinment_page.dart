@@ -1,8 +1,8 @@
+import 'package:bima_gyaan/pages/bottomBar_pages/appoinment_pages/appoinment_card_widget.dart';
+import 'package:bima_gyaan/pages/bottomBar_pages/appoinment_pages/reschedule_appoitment.dart';
 import 'package:bima_gyaan/pages/bottomBar_pages/participants_pages/participants_widget.dart';
-import 'package:bima_gyaan/utils/colors.dart';
 import 'package:bima_gyaan/widgets/rsuable_background_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppoinmentPage extends StatefulWidget {
   const AppoinmentPage({super.key});
@@ -26,117 +26,107 @@ class _HomePageState extends State<AppoinmentPage>
     // Tab content
     var width = MediaQuery.sizeOf(context).width;
     var height = MediaQuery.sizeOf(context).height;
-
-    final scheduleTab = ListView.builder(
+    final pending = ListView.builder(
       itemCount: 5,
       itemBuilder: (context, index) {
         return Padding(
             padding: EdgeInsets.symmetric(
                 vertical: height * 0.015, horizontal: width * 0.03),
-            child: ParticipantsWidget(
-              email: 'dolores.chambers@example.com',
-              imageUrl: '',
-              name: 'Ralph Edwards',
-              post: 'Dog Trainer',
-              webAddress: 'Biffco Enterprises Ltd.',
-              onPressedChat: () {},
-              onPressedSchedule: () {},
+            child: AppoinmentCardWidget(
+              name: "John Doe",
+              subject: "Follow-up Meeting",
+              description: "Discuss progress and next steps for the project.",
+              dateOrTime: "2024-12-10 10:00 AM",
+              rightSideWidget: Icon(Icons.calendar_today),
+              // Just an example widget
+              imageUrl: "https://example.com/profile.jpg",
+              // Image URL (if needed)
+              button1Text: "Accept",
+              button2Text: "Reject",
+              button1onPressed: () {
+                // Handle Schedule button press
+                print("Schedule button pressed");
+              },
+              button2onPressed: () {
+                // Handle Chat button press
+                print("Chat button pressed");
+              },
+              meetingLinkOrLocation:
+                  "Meeting Room 3 / Zoom Link", // Example link or location
             ));
       },
     );
-    final speakersTab = ListView.builder(
+    final accepted = ListView.builder(
       itemCount: 5,
       itemBuilder: (context, index) {
         return Padding(
             padding: EdgeInsets.symmetric(
                 vertical: height * 0.015, horizontal: width * 0.03),
-            child: ParticipantsWidget(
-              email: 'dolores.chambers@example.com',
-              imageUrl: '',
-              name: 'Ralph Edwards',
-              post: 'Dog Trainer',
-              webAddress: 'Biffco Enterprises Ltd.',
-              onPressedChat: () {},
-              onPressedSchedule: () {},
+            child: AppoinmentCardWidget(
+              name: "John Doe",
+              subject: "Follow-up Meeting",
+              description: "Discuss progress and next steps for the project.",
+              dateOrTime: "2024-12-10 10:00 AM",
+              rightSideWidget: Icon(Icons.calendar_today),
+              // Just an example widget
+              imageUrl: "https://example.com/profile.jpg",
+              // Image URL (if needed)
+              button1Text: "Reschedule",
+              button2Text: "Cancel",
+              button1onPressed: () {
+                // Handle Schedule button press
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => RescheduleAppoitment(),
+                    ));
+              },
+              button2onPressed: () {
+                // Handle Chat button press
+                print("Chat button pressed");
+              },
+              meetingLinkOrLocation:
+                  "Meeting Room 3 / Zoom Link", // Example link or location
             ));
       },
     );
-    final sponsorsTab = ListView.builder(
+    final rejected = ListView.builder(
       itemCount: 5,
       itemBuilder: (context, index) {
         return Padding(
             padding: EdgeInsets.symmetric(
                 vertical: height * 0.015, horizontal: width * 0.03),
-            child: ParticipantsWidget(
-              email: 'dolores.chambers@example.com',
-              imageUrl: '',
-              name: 'Ralph Edwards',
-              post: 'Dog Trainer',
-              webAddress: 'Biffco Enterprises Ltd.',
-              onPressedChat: () {},
-              onPressedSchedule: () {},
+            child: AppoinmentCardWidget(
+              name: "John Doe",
+              subject: "Follow-up Meeting",
+              description: "Discuss progress and next steps for the project.",
+              dateOrTime: "2024-12-10 10:00 AM",
+              rightSideWidget: Icon(Icons.calendar_today),
+              // Just an example widget
+              imageUrl: "https://example.com/profile.jpg",
+              // Image URL (if needed)
+              button1Text: "Reschedule",
+              button1onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => RescheduleAppoitment(),
+                    ));
+                // Handle Schedule button press
+                print("Schedule button pressed");
+              },
+
+              meetingLinkOrLocation:
+                  "Meeting Room 3 / Zoom Link", // Example link or location
             ));
       },
     );
-    // final scheduleTab = ListView.builder(
-    //   itemCount: scheduleData.length,
-    //   itemBuilder: (context, index) {
-    //     final item = scheduleData[index];
-    //     return Padding(
-    //       padding: const EdgeInsets.all(8.0),
-    //       child: Container(
-    //         height: 20,
-    //         color: Colors.red,
-    //       ),
-    //     );
-    //   },
-    // );
 
-    // final speakersTab = ListView.builder(
-    //   itemCount: speakersData.length,
-    //   itemBuilder: (context, index) {
-    //     final item = speakersData[index];
-    //     return ListTile(
-    //       title: Text(item["sessionName"]!),
-    //       trailing: Text(item["time"]!),
-    //     );
-    //   },
-    // );
-
-    // final sponsorsTab = ListView.builder(
-    //   itemCount: sponsorsData.length,
-    //   itemBuilder: (context, index) {
-    //     return Image.asset(sponsorsData[index]);
-    //   },
-    // );
-
-    // Pass tab data
     return ReusableBackGroundScreen(
       tabTitles: ["Pending", "Accepted", "Rejected"],
-      tabViews: [scheduleTab, speakersTab, sponsorsTab],
+      tabViews: [pending, accepted, rejected],
     );
   }
-
-  static final scheduleData = [
-    {"time": "08:00 AM To 08:45 AM", "registrationText": "Registration"},
-    {"time": "08:45 AM To 09:00 AM", "registrationText": "Inauguration"},
-    {"time": "08:45 AM To 09:00 AM", "registrationText": "Inauguration"},
-    {"time": "08:45 AM To 09:00 AM", "registrationText": "Inauguration"},
-    {"time": "08:45 AM To 09:00 AM", "registrationText": "Inauguration"},
-    {"time": "08:45 AM To 09:00 AM", "registrationText": "Inauguration"},
-    {"time": "08:45 AM To 09:00 AM", "registrationText": "Inauguration"},
-  ];
-
-  static final speakersData = [
-    {"sessionName": "Session 1", "time": "09:15 AM - 10:15 AM"},
-    {"sessionName": "Session 2", "time": "10:30 AM - 12:15 PM"},
-    // More speaker items...
-  ];
-
-  static final sponsorsData = [
-    "lib/assets/Sponsors1.png",
-    "lib/assets/Sponsors2.png",
-  ];
 }
 
 // @override

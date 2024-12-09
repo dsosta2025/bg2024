@@ -26,20 +26,17 @@ class _MorePageState extends State<MorePage> {
 
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        toolbarHeight: 15.h,
         backgroundColor: AppColors.white,
+        title: Image.asset(
+          'lib/assets/BG LOGO3.png',
+          height: 26.h,
+          width: 290.33.w,
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 30.h),
-            Image.asset(
-              'lib/assets/BG LOGO3.png',
-              height: 26.h,
-              width: 290.33.w,
-            ),
-            SizedBox(height: 30.h),
+            SizedBox(height: 1.h),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 18.h),
               child: Row(

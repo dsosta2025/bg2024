@@ -10,20 +10,17 @@ class EventsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        toolbarHeight: 15.h,
         backgroundColor: AppColors.white,
+        title: Image.asset(
+          'lib/assets/BG LOGO3.png',
+          height: 26.h,
+          width: 290.33.w,
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 50.h),
-            Image.asset(
-              'lib/assets/BG LOGO3.png',
-              height: 26.h,
-              width: 290.33.w,
-            ),
-            SizedBox(height: 30.h),
+            SizedBox(height: 10.h),
             Padding(
               padding: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 18.h),
               child: Row(
@@ -107,16 +104,16 @@ class EventsPage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 36.h),
+            SizedBox(height: 30.h),
             Container(
               width: 345.w,
-              height: 668.h,
               decoration: BoxDecoration(
                 color: AppColors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20.r),
-                  topRight: Radius.circular(20.r),
-                ),
+                borderRadius: BorderRadius.circular(20.r),
+                // borderRadius: BorderRadius.only(
+                //   topLeft: Radius.circular(20.r),
+                //   topRight: Radius.circular(20.r),
+                // ),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.1),
