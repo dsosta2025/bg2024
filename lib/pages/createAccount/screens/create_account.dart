@@ -1,9 +1,11 @@
-import 'package:bima_gyaan/pages/login_screen/screen/login_screen.dart';
 import 'package:bima_gyaan/utils/colors.dart';
 import 'package:bima_gyaan/utils/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+
+import '../controller/createAccoutController.dart';
 
 class CreateAccountScreen extends StatefulWidget {
   const CreateAccountScreen({super.key});
@@ -21,29 +23,31 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final TextEditingController organizationController = TextEditingController();
   final TextEditingController designationController = TextEditingController();
   bool _obscurePassword = true;
+  final SignUpController signUpController = Get.put(SignUpController());
 
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
-
+    var height = MediaQuery.sizeOf(context).height;
+    var width = MediaQuery.sizeOf(context).width;
     return Scaffold(
-      appBar: _buildAppBar(),
-      body: _buildBody(),
-    );
-  }
-
-  AppBar _buildAppBar() {
-    return AppBar(
-      automaticallyImplyLeading: false,
-      toolbarHeight: 15.h,
-      flexibleSpace: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: AppColors.blueGradient,
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
+      body: Stack(
+        children: [
+          _buildBody(),
+          Obx(() => signUpController.isLoading.value
+              ? Container(
+                  width: width,
+                  height: height,
+                  color: Colors.black.withOpacity(0.5),
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.orange2,
+                      strokeWidth: width * 0.0025,
+                    ),
+                  ),
+                )
+              : const SizedBox()),
+        ],
       ),
     );
   }
@@ -247,14 +251,33 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       text: 'Create Account',
       onPressed: () {
         if (_formKey.currentState!.validate()) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const LoginScreen()),
+          signUpController.signUp(
+            fullName: fullNameController.text.trim(),
+            email: emailController.text.trim(),
+            phone: phoneController.text.trim(),
+            password: passwordController.text.trim(),
+            organization: organizationController.text.trim(),
+            designation: designationController.text.trim(),
+            context: context
           );
         }
       },
     );
   }
+
+  // Widget _buildCreateAccountButton() {
+  //   return CustomButton(
+  //     text: 'Create Account',
+  //     onPressed: () {
+  //       if (_formKey.currentState!.validate()) {
+  //         Navigator.push(
+  //           context,
+  //           MaterialPageRoute(builder: (context) => const LoginScreen()),
+  //         );
+  //       }
+  //     },
+  //   );
+  // }
 
   Widget _buildAlternativeOptions() {
     return const Text(

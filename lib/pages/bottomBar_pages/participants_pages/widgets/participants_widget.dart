@@ -2,7 +2,8 @@ import 'package:bima_gyaan/widgets/customeButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../utils/colors.dart';
+import '../../../../utils/colors.dart';
+
 class ParticipantsWidget extends StatelessWidget {
   final String name;
   final String email;
@@ -28,7 +29,8 @@ class ParticipantsWidget extends StatelessWidget {
     var width = MediaQuery.sizeOf(context).width;
     var height = MediaQuery.sizeOf(context).height;
     return Container(
-      padding: EdgeInsets.symmetric(vertical: height * 0.02, horizontal: width * 0.05),
+      padding: EdgeInsets.symmetric(
+          vertical: height * 0.02, horizontal: width * 0.05),
       decoration: BoxDecoration(
         color: AppColors.lightPeach,
         borderRadius: BorderRadius.circular(20.r),
@@ -39,8 +41,16 @@ class ParticipantsWidget extends StatelessWidget {
             width: width * 0.25,
             height: height * 0.16,
             decoration: BoxDecoration(
-                color: Colors.red,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(width * 0.05)),
+            child: imageUrl.isNotEmpty
+                ? Image.network(imageUrl)
+                : Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.03),
+                    child: Image.asset(
+                      "lib/assets/user.png",
+                    ),
+                  ),
           ),
           SizedBox(
             width: width * 0.035,
@@ -110,7 +120,8 @@ class ParticipantsWidget extends StatelessWidget {
                   SizedBox(width: width * 0.025),
                   CustomeButton(
                     text: 'Chat',
-                    onPressed: onPressedChat, // Use the passed function
+                    onPressed: onPressedChat,
+                    // Use the passed function
                     horizontalPadding: width * 0.04,
                     verticalPadding: height * 0.012,
                     transparent: true,

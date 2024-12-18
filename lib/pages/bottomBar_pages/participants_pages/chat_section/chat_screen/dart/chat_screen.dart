@@ -1,29 +1,40 @@
 
+import 'package:bima_gyaan/pages/bottomBar_pages/participants_pages/chat_section/chat_screen/dart/chatControler.dart';
 import 'package:bima_gyaan/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ChatDetailScreen extends StatelessWidget {
-  const ChatDetailScreen({super.key});
+  final String userId;
+  final String otherUserId;
+  final String userName;
+
+  ChatDetailScreen({
+    required this.userId,
+    required this.otherUserId,
+    required this.userName,
+  });
+
+  final ChatController chatController = Get.put(ChatController());
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.sizeOf(context).width;
     var height = MediaQuery.sizeOf(context).height;
-    double borderRadius = width * 0.1;
+
+    // Start listening to messages
+    chatController.listenToMessages(userId, otherUserId);
 
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          " Ralph Edwards",
-          style: TextStyle(
-            fontFamily: 'Poppins',
-            fontSize: width * 0.05, // Adjust font size based on screen width
-            fontWeight: FontWeight.w600,
-          ),
+          userName,
+          style: TextStyle(fontSize: width * 0.05, fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
-        backgroundColor: AppColors.white,
+        backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black, size: width * 0.05),
@@ -32,141 +43,55 @@ class ChatDetailScreen extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          Column(
-            children: [
-              SizedBox(height: height * 0.1), // Adjusting height based on screen size
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(borderRadius),
-                      topRight: Radius.circular(borderRadius),
-                    ),
-                    color: Colors.black.withOpacity(0.7),
-                  ),
-                  child: Stack(
-                    children: [
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(borderRadius),
-                            topLeft: Radius.circular(borderRadius),
-                          ),
-                          child: Image.asset(
-                            'lib/assets/Appoinment BG Image.png',
-                            width: width,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        width: width,
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.7),
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(borderRadius),
-                            topLeft: Radius.circular(borderRadius),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(width * 0.04), // Adjust padding
-                        child: ListView(
-                          children: const [
-                            ChatBubble(
-                              message: "Hi!",
-                              time: "10:10",
-                              isSender: true,
-                            ),
-                            ChatBubble(
-                              message:
-                              "Awesome, thanks for letting me know! Can't wait for my delivery. 🎉",
-                              time: "10:11",
-                              isSender: true,
-                            ),
-                            ChatBubble(
-                              message:
-                              "No problem at all!\nI'll be there in about 15 minutes.\nI'll text you when I arrive.",
-                              time: "10:11",
-                              isSender: false,
-                            ),
-                            ChatBubble(
-                              message: "Great! 😊",
-                              time: "10:12",
-                              isSender: true,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+          Obx(
+                () => ListView.builder(
+              padding: EdgeInsets.all(width * 0.04),
+              itemCount: chatController.messages.length,
+              itemBuilder: (context, index) {
+                final message = chatController.messages[index];
+                final isSender = message.senderId == userId;
+
+                return ChatBubble(
+                  message: message.message,
+                  time: message.timestamp.toDate().toString(),
+                  isSender: isSender,
+                );
+              },
+            ),
           ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              padding: EdgeInsets.symmetric(
-                  horizontal: width * 0.02, vertical: height * 0.03), // Adjust padding based on screen size
+              padding: EdgeInsets.symmetric(horizontal: width * 0.02, vertical: height * 0.03),
               decoration: BoxDecoration(
-                color: Colors.transparent,
+                color: Colors.grey.shade200,
                 border: Border(top: BorderSide(color: Colors.grey.shade300)),
               ),
               child: Row(
                 children: [
-                  Container(
-                    margin: EdgeInsets.only(right: width * 0.02), // Margin for button
-                    height: width * 0.1, // Adjust height
-                    width: width * 0.1, // Adjust width
-                    decoration: BoxDecoration(
-                      color: Colors.orange.shade400,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(Icons.add, color: Colors.white),
-                  ),
-                  // TextField for Message Input
                   Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(width * 0.05), // Border radius based on width
-                      ),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: "Type a message ...",
-                          hintStyle: TextStyle(
-                              color: Colors.grey, fontSize: width * 0.04), // Adjust hint text size
-                          border: InputBorder.none,
-                          contentPadding:
-                          EdgeInsets.symmetric(horizontal: width * 0.04), // Adjust padding
-                        ),
+                    child: TextField(
+                      controller: chatController.messageController,
+                      decoration: InputDecoration(
+                        hintText: "Type a message ...",
+                        hintStyle: TextStyle(fontSize: width * 0.04),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(horizontal: width * 0.04),
                       ),
                     ),
                   ),
-                  // Send Button
-                  SizedBox(width: width * 0.02), // Adjust spacing between buttons
-                  Container(
-                    height: width * 0.1, // Adjust height
-                    width: width * 0.1, // Adjust width
-                    decoration: BoxDecoration(
-                      color: Colors.orange.shade400,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(Icons.send, color: Colors.white),
+                  IconButton(
+                    icon: Icon(Icons.send, color: Colors.orange),
+                    onPressed: () {
+                      chatController.sendMessage(
+                        userId,
+                        otherUserId,
+                        chatController.messageController.text.trim(),
+                      );
+                    },
                   ),
                 ],
               ),
-            ),
-          ),
-          Positioned(
-            left: width * 0.05, // Adjust the position of avatar
-            right: width * 0.05, // Adjust the position of avatar
-            top: height * 0.06, // Adjust the top position of avatar
-            child: CircleAvatar(
-              backgroundColor: Colors.red,
-              radius: width * 0.1, // Adjust radius based on width
             ),
           ),
         ],
@@ -175,6 +100,179 @@ class ChatDetailScreen extends StatelessWidget {
   }
 }
 
+// class ChatDetailScreen extends StatelessWidget {
+//   const ChatDetailScreen({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     var width = MediaQuery.sizeOf(context).width;
+//     var height = MediaQuery.sizeOf(context).height;
+//     double borderRadius = width * 0.1;
+//
+//     return Scaffold(
+//       backgroundColor: AppColors.white,
+//       appBar: AppBar(
+//         title: Text(
+//           " Ralph Edwards",
+//           style: TextStyle(
+//             fontFamily: 'Poppins',
+//             fontSize: width * 0.05, // Adjust font size based on screen width
+//             fontWeight: FontWeight.w600,
+//           ),
+//         ),
+//         centerTitle: true,
+//         backgroundColor: AppColors.white,
+//         elevation: 0,
+//         leading: IconButton(
+//           icon: Icon(Icons.arrow_back, color: Colors.black, size: width * 0.05),
+//           onPressed: () => Navigator.pop(context),
+//         ),
+//       ),
+//       body: Stack(
+//         children: [
+//           Column(
+//             children: [
+//               SizedBox(height: height * 0.1), // Adjusting height based on screen size
+//               Expanded(
+//                 child: Container(
+//                   decoration: BoxDecoration(
+//                     borderRadius: BorderRadius.only(
+//                       topLeft: Radius.circular(borderRadius),
+//                       topRight: Radius.circular(borderRadius),
+//                     ),
+//                     color: Colors.black.withOpacity(0.7),
+//                   ),
+//                   child: Stack(
+//                     children: [
+//                       Align(
+//                         alignment: Alignment.bottomCenter,
+//                         child: ClipRRect(
+//                           borderRadius: BorderRadius.only(
+//                             topRight: Radius.circular(borderRadius),
+//                             topLeft: Radius.circular(borderRadius),
+//                           ),
+//                           child: Image.asset(
+//                             'lib/assets/Appoinment BG Image.png',
+//                             width: width,
+//                             fit: BoxFit.cover,
+//                           ),
+//                         ),
+//                       ),
+//                       Container(
+//                         width: width,
+//                         decoration: BoxDecoration(
+//                           color: Colors.black.withOpacity(0.7),
+//                           borderRadius: BorderRadius.only(
+//                             topRight: Radius.circular(borderRadius),
+//                             topLeft: Radius.circular(borderRadius),
+//                           ),
+//                         ),
+//                       ),
+//                       Padding(
+//                         padding: EdgeInsets.all(width * 0.04), // Adjust padding
+//                         child: ListView(
+//                           children: const [
+//                             ChatBubble(
+//                               message: "Hi!",
+//                               time: "10:10",
+//                               isSender: true,
+//                             ),
+//                             ChatBubble(
+//                               message:
+//                               "Awesome, thanks for letting me know! Can't wait for my delivery. 🎉",
+//                               time: "10:11",
+//                               isSender: true,
+//                             ),
+//                             ChatBubble(
+//                               message:
+//                               "No problem at all!\nI'll be there in about 15 minutes.\nI'll text you when I arrive.",
+//                               time: "10:11",
+//                               isSender: false,
+//                             ),
+//                             ChatBubble(
+//                               message: "Great! 😊",
+//                               time: "10:12",
+//                               isSender: true,
+//                             ),
+//                           ],
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//             ],
+//           ),
+//           Align(
+//             alignment: Alignment.bottomCenter,
+//             child: Container(
+//               padding: EdgeInsets.symmetric(
+//                   horizontal: width * 0.02, vertical: height * 0.03), // Adjust padding based on screen size
+//               decoration: BoxDecoration(
+//                 color: Colors.transparent,
+//                 border: Border(top: BorderSide(color: Colors.grey.shade300)),
+//               ),
+//               child: Row(
+//                 children: [
+//                   Container(
+//                     margin: EdgeInsets.only(right: width * 0.02), // Margin for button
+//                     height: width * 0.1, // Adjust height
+//                     width: width * 0.1, // Adjust width
+//                     decoration: BoxDecoration(
+//                       color: Colors.orange.shade400,
+//                       shape: BoxShape.circle,
+//                     ),
+//                     child: const Icon(Icons.add, color: Colors.white),
+//                   ),
+//                   // TextField for Message Input
+//                   Expanded(
+//                     child: Container(
+//                       decoration: BoxDecoration(
+//                         color: Colors.grey.shade200,
+//                         borderRadius: BorderRadius.circular(width * 0.05), // Border radius based on width
+//                       ),
+//                       child: TextField(
+//                         decoration: InputDecoration(
+//                           hintText: "Type a message ...",
+//                           hintStyle: TextStyle(
+//                               color: Colors.grey, fontSize: width * 0.04), // Adjust hint text size
+//                           border: InputBorder.none,
+//                           contentPadding:
+//                           EdgeInsets.symmetric(horizontal: width * 0.04), // Adjust padding
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                   // Send Button
+//                   SizedBox(width: width * 0.02), // Adjust spacing between buttons
+//                   Container(
+//                     height: width * 0.1, // Adjust height
+//                     width: width * 0.1, // Adjust width
+//                     decoration: BoxDecoration(
+//                       color: Colors.orange.shade400,
+//                       shape: BoxShape.circle,
+//                     ),
+//                     child: const Icon(Icons.send, color: Colors.white),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//           Positioned(
+//             left: width * 0.05, // Adjust the position of avatar
+//             right: width * 0.05, // Adjust the position of avatar
+//             top: height * 0.06, // Adjust the top position of avatar
+//             child: CircleAvatar(
+//               backgroundColor: Colors.red,
+//               radius: width * 0.1, // Adjust radius based on width
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+//
 class ChatBubble extends StatelessWidget {
   final String message;
   final String time;

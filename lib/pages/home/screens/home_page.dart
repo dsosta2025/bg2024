@@ -1,4 +1,5 @@
-import 'package:bima_gyaan/pages/home_pages/bookSlotSection/book_slot_Screen.dart';
+import 'package:bima_gyaan/pages/home/controller/homeController.dart';
+import 'package:bima_gyaan/pages/home_pages/bookSlotSection/screen/book_slot_Screen.dart';
 import 'package:bima_gyaan/pages/home_pages/buy_sponsor_section/buy_sponsor_screen.dart';
 import 'package:bima_gyaan/pages/home_pages/schedule.dart';
 import 'package:bima_gyaan/pages/home_pages/speakers.dart';
@@ -8,11 +9,13 @@ import 'package:bima_gyaan/utils/custom_button.dart';
 import 'package:bima_gyaan/widgets/rsuable_background_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import 'session_speaker_card.dart';
+import 'package:get/get.dart';
+import '../../home_pages/session_speaker_card.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  HomePage({super.key, required this.eventId});
+
+  String eventId;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -21,10 +24,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  HomeController controller = Get.put(HomeController());
 
   @override
   void initState() {
     _tabController = TabController(length: 3, vsync: this);
+    print(widget.eventId);
+    controller.fetchSchedules(widget.eventId);
     super.initState();
   }
 
@@ -35,10 +41,7 @@ class _HomePageState extends State<HomePage>
   }
 
   late var speakersTab;
-
   bool istap = true;
-
-  // careers@voi11.com
   final List<Map<String, String>> scheduleData = [
     {"time": "08:00 AM To 08:45 AM", "registrationText": "Registration"},
     {"time": "08:45 AM To 09:00 AM", "registrationText": "Inauguration"},
@@ -82,7 +85,6 @@ class _HomePageState extends State<HomePage>
     },
     {"time": "17:45 PM To 18:15 PM", "registrationText": "Closing"},
   ];
-
   final List<Map<String, String>> speakersData = [
     {"sessionName": "Session 1", "time": "09:15 AM - 10:15 AM"},
     {"sessionName": "Session Break", "time": "10:15 AM - 10:30 AM"},
@@ -95,7 +97,6 @@ class _HomePageState extends State<HomePage>
     {"sessionName": "Session 6", "time": "17:15 PM - 17:45 PM"},
     {"sessionName": "Closing", "time": "17:45 PM - 18:15 PM"},
   ];
-
   final List<String> sponsorsData = [
     "lib/assets/Sponsors1.png",
     "lib/assets/Sponsors2.png",
@@ -105,28 +106,71 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     var width = MediaQuery.sizeOf(context).width;
     var height = MediaQuery.sizeOf(context).height;
-    // Tab content
-    final scheduleTab = ListView.builder(
-      padding: EdgeInsets.symmetric(
-          horizontal: width * 0.04, vertical: height * 0.02),
-      itemCount: scheduleData.length,
-      itemBuilder: (context, index) {
-        final item = scheduleData[index];
-        return Column(
-          children: [
-            Schedule(
-              time: item["time"]!,
-              registrationText: item["registrationText"]!,
-              additionalText: item["additionalText"],
-            ),
-            SizedBox(height: height * 0.025),
-          ],
+    controller.fetchSchedules(widget.eventId);
+    final scheduleTab = Obx(() {
+      if (controller.isLoading.value) {
+        // Loading state
+        return const Center(
+            child: CircularProgressIndicator(
+          color: Colors.white,
+        ));
+      } else if (controller.hasError.value) {
+        // Error state
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.error, color: Colors.redAccent, size: 40.w),
+              SizedBox(height: 10.h),
+              Text(
+                controller.errorMessage.value,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 19.sp,
+                  color: Colors.redAccent,
+                ),
+              ),
+              SizedBox(height: 10.h),
+              ElevatedButton(
+                onPressed: () => controller.fetchSchedules(widget.eventId),
+                child: const Text("Retry"),
+              ),
+            ],
+          ),
         );
-      },
-    );
+      } else if (controller.schedules.isEmpty) {
+        // Empty state
+        return Center(
+          child: Text(
+            'No schedules available.',
+            style: TextStyle(fontSize: 16.sp, color: Colors.white),
+          ),
+        );
+      } else {
+        // Success state (show schedule list)
+        return ListView.builder(
+          padding: EdgeInsets.symmetric(
+            horizontal: MediaQuery.sizeOf(context).width * 0.04,
+            vertical: MediaQuery.sizeOf(context).height * 0.02,
+          ),
+          itemCount: controller.schedules.length,
+          itemBuilder: (context, index) {
+            final item = controller.schedules.value[index];
+            return Column(
+              children: [
+                Schedule(
+                  time: item.scheduleTime!,
+                  registrationText: item.scheduleTitle,
+                ),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.025),
+              ],
+            );
+          },
+        );
+      }
+    });
 
-    // Speakers Tab
-    if (istap)
+    if (istap) {
       speakersTab = ListView.builder(
         padding: EdgeInsets.symmetric(
             horizontal: width * 0.04, vertical: height * 0.02),
@@ -154,7 +198,7 @@ class _HomePageState extends State<HomePage>
                                     istap = true;
                                     setState(() {});
                                   },
-                                  icon: Icon(
+                                  icon: const Icon(
                                     Icons.arrow_back_ios,
                                     color: AppColors.white,
                                   )),
@@ -175,7 +219,7 @@ class _HomePageState extends State<HomePage>
                         SizedBox(
                           height: height * 0.03,
                         ),
-                        SessionSpeakerCard(
+                        const SessionSpeakerCard(
                           imageUrl: '',
                           name: 'Bessie Cooper',
                           toTime: '9:25 am',
@@ -200,8 +244,7 @@ class _HomePageState extends State<HomePage>
           );
         },
       );
-
-    // Sponsors Tab
+    }
     final sponsorsTab = ListView.builder(
       padding: EdgeInsets.symmetric(
           horizontal: width * 0.04, vertical: height * 0.02),
@@ -217,7 +260,6 @@ class _HomePageState extends State<HomePage>
         );
       },
     );
-
     return ReusableBackGroundScreen(
       tabTitles: const ["Schedule", "Speakers", "Sponsors"],
       tabViews: [scheduleTab, speakersTab, sponsorsTab],
@@ -228,7 +270,9 @@ class _HomePageState extends State<HomePage>
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => BookSlotScreen(),
+                    builder: (context) => BookSlotScreen(
+                      eventId: widget.eventId,
+                    ),
                   ));
             }),
         CustomButton(
@@ -237,7 +281,9 @@ class _HomePageState extends State<HomePage>
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => BookSlotScreen(),
+                    builder: (context) => BookSlotScreen(
+                      eventId: widget.eventId,
+                    ),
                   ));
             }),
         CustomButton(
@@ -246,13 +292,32 @@ class _HomePageState extends State<HomePage>
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => BuySponsorScreen(),
+                    builder: (context) => const BuySponsorScreen(),
                   ));
             }),
       ],
     );
   }
+}
 
+// final scheduleTab = Obx(() => ListView.builder(
+//       padding: EdgeInsets.symmetric(
+//           horizontal: width * 0.04, vertical: height * 0.02),
+//       itemCount: controller.schedules.length,
+//       itemBuilder: (context, index) {
+//         final item = controller.schedules.value[index];
+//         return Column(
+//           children: [
+//             Schedule(
+//               time: item.scheduleTime!,
+//               registrationText: item.scheduleTitle,
+//               // additionalText: "item[" "additionalText" "]",
+//             ),
+//             SizedBox(height: height * 0.025),
+//           ],
+//         );
+//       },
+//     ));
 // static final scheduleData = [
 //   {"time": "08:00 AM To 08:45 AM", "registrationText": "Registration"},
 //   {"time": "08:45 AM To 09:00 AM", "registrationText": "Inauguration"},
@@ -273,7 +338,6 @@ class _HomePageState extends State<HomePage>
 //   "lib/assets/Sponsors1.png",
 //   "lib/assets/Sponsors2.png",
 // ];
-}
 
 //   @override
 //   Widget build(BuildContext context) {

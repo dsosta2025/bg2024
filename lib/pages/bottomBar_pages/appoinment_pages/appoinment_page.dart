@@ -1,6 +1,6 @@
 import 'package:bima_gyaan/pages/bottomBar_pages/appoinment_pages/appoinment_card_widget.dart';
 import 'package:bima_gyaan/pages/bottomBar_pages/appoinment_pages/reschedule_appoitment.dart';
-import 'package:bima_gyaan/pages/bottomBar_pages/participants_pages/participants_widget.dart';
+import 'package:bima_gyaan/pages/bottomBar_pages/participants_pages/widgets/participants_widget.dart';
 import 'package:bima_gyaan/widgets/rsuable_background_widget.dart';
 import 'package:flutter/material.dart';
 

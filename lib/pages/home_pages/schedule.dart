@@ -5,13 +5,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class Schedule extends StatelessWidget {
   final String time;
   final String registrationText;
-  final String? additionalText; // Optional additional text
+  // final String? additionalText; // Optional additional text
 
   const Schedule({
     super.key,
     required this.time,
     required this.registrationText,
-    this.additionalText,
+    // this.additionalText,
   });
 
   @override

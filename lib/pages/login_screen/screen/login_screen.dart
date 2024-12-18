@@ -1,54 +1,75 @@
-import 'package:bima_gyaan/pages/create_account.dart';
+import 'package:bima_gyaan/pages/createAccount/screens/create_account.dart';
 import 'package:bima_gyaan/pages/forget_password_screen.dart';
-import 'package:bima_gyaan/pages/home_screen.dart';
-import 'package:bima_gyaan/pages/login_screen/widgets/app_bar_widget.dart';
+import 'package:bima_gyaan/pages/login_screen/controller/loginController.dart';
 import 'package:bima_gyaan/utils/colors.dart';
 import 'package:bima_gyaan/utils/create_account_button.dart';
 import 'package:bima_gyaan/utils/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+
+import 'package:get/get.dart';
+
 class LoginScreen extends StatefulWidget {
   static const routeName = '/';
+
   const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
+LoginController controller = Get.put(LoginController());
+
 class _LoginScreenState extends State<LoginScreen> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _emailController = TextEditingController(text: "trilok10@gmail.com");
+  final _passwordController = TextEditingController(text: "Trilok@1234");
   final _formKey = GlobalKey<FormState>();
   bool _isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.sizeOf(context).height;
+    var width = MediaQuery.sizeOf(context).width;
     return Scaffold(
-      appBar: const CustomAppBar(),
-      body: SafeArea(
-        child: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: AppColors.blueGradient,
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: AppColors.blueGradient,
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
             ),
-          ),
-          child: SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  SizedBox(height: 50.h),
-                  _buildLogo(),
-                  SizedBox(height: 30.h),
-                  _buildLoginForm(),
-                ],
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    SizedBox(height: 50.h),
+                    _buildLogo(),
+                    SizedBox(height: 30.h),
+                    _buildLoginForm(),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
+          Obx(() => controller.isLoading.value
+              ? Container(
+                  width: width,
+                  height: height,
+                  color: Colors.black.withOpacity(0.5),
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.orange2,
+                      strokeWidth: width * 0.0025,
+                    ),
+                  ),
+                )
+              : const SizedBox()),
+        ],
       ),
     );
   }
@@ -194,18 +215,32 @@ class _LoginScreenState extends State<LoginScreen> {
     return CustomButton(
       text: 'Login',
       onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HomeScreen(),
-          ),
-        );
-        // if (_formKey.currentState!.validate()) {
-        //
-        // }
+        if (_formKey.currentState!.validate()) {
+          controller.login(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim(),
+          );
+        }
       },
     );
   }
+
+  // Widget _buildLoginButton() {
+  //   return CustomButton(
+  //     text: 'Login',
+  //     onPressed: () {
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => const HomeScreen(),
+  //         ),
+  //       );
+  //       // if (_formKey.currentState!.validate()) {
+  //       //
+  //       // }
+  //     },
+  //   );
+  // }
 
   Widget _buildCreateAccountButton() {
     return Column(

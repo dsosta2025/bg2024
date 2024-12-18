@@ -1,12 +1,14 @@
+import 'package:bima_gyaan/firebase_options.dart';
 import 'package:bima_gyaan/pages/login_screen/screen/login_screen.dart';
-import 'package:bima_gyaan/pages/splash_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 Future<void> main() async {
-  // await Firebase.initializeApp(
-  //   options: DefaultFirebaseOptions.currentPlatform,
-  // );
+  WidgetsFlutterBinding
+      .ensureInitialized(); // Ensure Flutter binding is initialized
+  await Firebase.initializeApp(); // Initialize Firebase
   runApp(const MyApp());
 }
 
@@ -41,20 +43,19 @@ class _MyAppState extends State<MyApp> {
     //     },
     //   ),
     // );
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       // Main Color
 
       routes: {
         // SplashScreen.routeName: (context) => const SplashScreen(),
-        LoginScreen.routeName: (context) =>  LoginScreen(),
+        LoginScreen.routeName: (context) => LoginScreen(),
         //CreateAccountScreen.routeName: (context) => const CreateAccountScreen(),
         //SignUpPage.routeName: (context) => const SignUpPage(),
         //ForgetPasswordScreen.routeName: (context) => const ForgetPasswordScreen(),
         //HomeScreen.routeName: (context) => const HomeScreen(),
       },
     );
-
   }
 }
 

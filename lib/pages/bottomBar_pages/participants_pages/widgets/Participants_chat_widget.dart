@@ -2,7 +2,7 @@ import 'package:bima_gyaan/widgets/customeButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../utils/colors.dart';
+import '../../../../utils/colors.dart';
 
 class ParticipantsChatWidget extends StatelessWidget {
   final String name;
