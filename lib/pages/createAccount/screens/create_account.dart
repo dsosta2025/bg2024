@@ -34,6 +34,21 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       body: Stack(
         children: [
           _buildBody(),
+          Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    vertical: height * 0.03, horizontal: width * 0.03),
+                child: IconButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                      size: width * 0.065,
+                    )),
+              )),
           Obx(() => signUpController.isLoading.value
               ? Container(
                   width: width,
@@ -119,8 +134,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
             _buildCreateAccountButton(),
             SizedBox(height: 20.h),
             _buildAlternativeOptions(),
-            SizedBox(height: 20.h),
-            _buildSocialMediaLogos(),
+            // SizedBox(height: 20.h),
+            // _buildSocialMediaLogos(),
             SizedBox(height: 20.h),
             _buildSponsoredBySection(),
           ],
@@ -252,14 +267,13 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       onPressed: () {
         if (_formKey.currentState!.validate()) {
           signUpController.signUp(
-            fullName: fullNameController.text.trim(),
-            email: emailController.text.trim(),
-            phone: phoneController.text.trim(),
-            password: passwordController.text.trim(),
-            organization: organizationController.text.trim(),
-            designation: designationController.text.trim(),
-            context: context
-          );
+              fullName: fullNameController.text.trim(),
+              email: emailController.text.trim(),
+              phone: phoneController.text.trim(),
+              password: passwordController.text.trim(),
+              organization: organizationController.text.trim(),
+              designation: designationController.text.trim(),
+              context: context);
         }
       },
     );

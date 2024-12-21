@@ -13,9 +13,10 @@ import 'package:get/get.dart';
 import '../../home_pages/session_speaker_card.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({super.key, required this.eventId});
+  HomePage({super.key, required this.eventId, required this.eventYear});
 
   String eventId;
+  String eventYear;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -260,45 +261,50 @@ class _HomePageState extends State<HomePage>
         );
       },
     );
+    bool showButtons = int.parse(widget.eventYear) >= DateTime.now().year;
+
     return ReusableBackGroundScreen(
       tabTitles: const ["Schedule", "Speakers", "Sponsors"],
       tabViews: [scheduleTab, speakersTab, sponsorsTab],
-      tbaButtons: [
-        CustomButton(
-            text: 'Event Registration',
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BookSlotScreen(
-                      eventId: widget.eventId,
-                    ),
-                  ));
-            }),
-        CustomButton(
-            text: 'Event Registration',
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BookSlotScreen(
-                      eventId: widget.eventId,
-                    ),
-                  ));
-            }),
-        CustomButton(
-            text: 'Buy sponsorship',
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const BuySponsorScreen(),
-                  ));
-            }),
-      ],
+      tbaButtons: showButtons
+          ? [
+              CustomButton(
+                  text: 'Event Registration',
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BookSlotScreen(
+                            eventId: widget.eventId,
+                          ),
+                        ));
+                  }),
+              CustomButton(
+                  text: 'Event Registration',
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BookSlotScreen(
+                            eventId: widget.eventId,
+                          ),
+                        ));
+                  }),
+              CustomButton(
+                  text: 'Buy sponsorship',
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const BuySponsorScreen(),
+                        ));
+                  }),
+            ]
+          : [],
     );
   }
 }
+
 
 // final scheduleTab = Obx(() => ListView.builder(
 //       padding: EdgeInsets.symmetric(

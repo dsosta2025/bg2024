@@ -211,6 +211,8 @@ class EventScreen extends StatelessWidget {
                 controller.eventsList[index].name,
                 controller.eventsList[index].pickupDate,
                 controller.eventsList[index].id,
+                controller.eventsList[index].year,
+
               );
             },
           ),
@@ -249,7 +251,7 @@ class EventScreen extends StatelessWidget {
   // }
 
   Widget _buildHotelInfoCard(BuildContext context, String backgroundImage,
-      String hotelName, String hotelLocation, String dateText, String eventId) {
+      String hotelName, String hotelLocation, String dateText, String eventId, String eventYear) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 7.w),
       child: HotelInfoCard(
@@ -264,6 +266,7 @@ class EventScreen extends StatelessWidget {
             MaterialPageRoute(
                 builder: (builder) => BottomNavigation(
                       eventId: eventId,
+                     eventYear: eventYear,
                     )),
           );
           print('Know more pressed for $hotelName');

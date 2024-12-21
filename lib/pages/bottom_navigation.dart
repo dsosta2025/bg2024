@@ -9,7 +9,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BottomNavigation extends StatefulWidget {
   final String eventId; // Use 'final' for eventId as it won't change
-  const BottomNavigation({super.key, required this.eventId});
+  final String eventYear; // Use 'final' for eventId as it won't change
+
+  const BottomNavigation(
+      {super.key, required this.eventId, required this.eventYear});
 
   @override
   State<BottomNavigation> createState() => _BottomNavigationState();
@@ -24,7 +27,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
     super.initState();
     // Initialize _screens here
     _screens = [
-      HomePage(eventId: widget.eventId),
+      HomePage(eventId: widget.eventId,eventYear: widget.eventYear,),
       const ParticipantsPage(),
       const AppoinmentPage(),
       const EventsPage(),

@@ -1,4 +1,5 @@
 import 'package:bima_gyaan/pages/bottomBar_pages/appoinment_pages/models/appoitmentModel.dart';
+import 'package:bima_gyaan/widgets/customeSncakBar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
@@ -86,7 +87,6 @@ class AppointmentController extends GetxController {
   Future<void> updateAppointmentStatus(
       String appointmentId, String newStatus) async {
     try {
-
       // Update Firestore
       await _firestore.collection('appointments').doc(appointmentId).update({
         'status': newStatus,
@@ -104,6 +104,34 @@ class AppointmentController extends GetxController {
       print(e);
       Get.snackbar('Error', 'Failed to update appointment status: $e',
           snackPosition: SnackPosition.BOTTOM);
+    }
+  }
+
+  // Method to delete an appointment
+// Method to delete an appointment
+  Future<void> deleteAppointment(String appointmentId) async {
+    try {
+      isLoading.value = true;
+      errorMessage.value = '';
+
+      // Delete Firestore document
+      await _firestore.collection('appointments').doc(appointmentId).delete();
+
+      // Update locally by removing the appointment from the list
+      appointments.removeWhere((appointment) => appointment.id == appointmentId);
+
+      isLoading.value = false;
+
+      // Show success snackbar
+      CustomSnackbarr.show(
+          Get.context!, 'Success', 'Appointment deleted successfully!');
+    } catch (e) {
+      isLoading.value = false;
+      errorMessage.value = 'Failed to delete appointment: $e';
+
+      // Show error snackbar
+      CustomSnackbarr.show(Get.context!, 'Error', errorMessage.value,
+          isError: true);
     }
   }
 }

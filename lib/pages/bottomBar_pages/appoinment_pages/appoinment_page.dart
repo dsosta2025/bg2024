@@ -1,6 +1,7 @@
 import 'package:bima_gyaan/pages/bottomBar_pages/appoinment_pages/appoinment_card_widget.dart';
 import 'package:bima_gyaan/pages/bottomBar_pages/appoinment_pages/controllers/appoitmentController.dart';
 import 'package:bima_gyaan/pages/bottomBar_pages/appoinment_pages/models/appoitmentModel.dart';
+import 'package:bima_gyaan/pages/bottomBar_pages/participants_pages/scgedule_section/screen/schedule_screen.dart';
 import 'package:bima_gyaan/utils/colors.dart';
 import 'package:bima_gyaan/widgets/rsuable_background_widget.dart';
 import 'package:flutter/material.dart';
@@ -25,10 +26,12 @@ class _AppoinmentPageState extends State<AppoinmentPage>
     appointmentController.fetchUserAppointments();
     super.initState();
   }
+
   Future<void> _refreshAppointments() async {
     await appointmentController.fetchUserAppointments();
     appointmentController.appointments.refresh();
   }
+
   Widget _buildAppointmentList(List<AppointmentModel> appointments,
       String emptyMessage, String currentUserId) {
     return RefreshIndicator(
@@ -112,6 +115,15 @@ class _AppoinmentPageState extends State<AppoinmentPage>
                                 : showRescheduleCancelButtons ||
                                         showRescheduleButton
                                     ? () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ScheduleScreen(
+                                              appointmentId: appointment.id,
+                                            ),
+                                          ),
+                                        );
                                         print(
                                             "Reschedule button pressed for ${appointment.subject}");
                                       }
@@ -128,6 +140,8 @@ class _AppoinmentPageState extends State<AppoinmentPage>
                                   }
                                 : showRescheduleCancelButtons
                                     ? () {
+                                        appointmentController
+                                            .deleteAppointment(appointment.id);
                                         print(
                                             "Cancel button pressed for ${appointment.subject}");
                                       }
@@ -140,6 +154,7 @@ class _AppoinmentPageState extends State<AppoinmentPage>
                     ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     final String currentUserId =

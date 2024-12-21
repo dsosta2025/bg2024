@@ -7,7 +7,6 @@ import 'package:bima_gyaan/utils/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-
 import 'package:get/get.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -22,8 +21,8 @@ class LoginScreen extends StatefulWidget {
 LoginController controller = Get.put(LoginController());
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _emailController = TextEditingController(text: "trilok10@gmail.com");
-  final _passwordController = TextEditingController(text: "Trilok@1234");
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isPasswordVisible = false;
 

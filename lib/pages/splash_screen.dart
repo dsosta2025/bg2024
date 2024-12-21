@@ -28,12 +28,40 @@
 //   }
 // }
 
+import 'package:bima_gyaan/pages/events/screens/event_screen.dart';
+import 'package:bima_gyaan/pages/login_screen/screen/login_screen.dart';
 import 'package:bima_gyaan/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // If using Firebase for authentication
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
+
   static const routeName = '/';
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    // Check user authentication state
+    Future.delayed(const Duration(seconds: 2), () {
+      final user =
+          FirebaseAuth.instance.currentUser; // Check Firebase authentication
+
+      if (user != null) {
+        Get.off(() => EventScreen());
+      } else {
+        // If the user is not logged in, navigate to the LoginScreen
+        Get.off(() => const LoginScreen());
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,12 +87,9 @@ class SplashScreen extends StatelessWidget {
             width: 269,
             height: 115,
           ),
-
           const Spacer(),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            // Center the row
             children: [
               Image.asset(
                 'lib/assets/splashpeople.png',
@@ -77,9 +102,7 @@ class SplashScreen extends StatelessWidget {
             height: 0,
             color: AppColors.dark,
           ),
-
           const SizedBox(height: 70),
-
           // Bottom Section
           Padding(
             padding:
@@ -147,12 +170,10 @@ class SplashScreen extends StatelessWidget {
 //   const SplashScreen({super.key});
 
 //   Future<void> _navigateBasedOnAuthStatus(BuildContext context) async {
-    
+
 //     await Future.delayed(const Duration(seconds: 2));
 
-
 //     final bool isLoggedIn = await _checkUserLoginStatus();
-
 
 //     if (isLoggedIn) {
 //       Navigator.of(context).pushReplacement(
@@ -167,7 +188,7 @@ class SplashScreen extends StatelessWidget {
 
 //   Future<bool> _checkUserLoginStatus() async {
 
-//     return false; 
+//     return false;
 //   }
 
 //   @override

@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 
-class CreateAccountButton extends StatelessWidget {
-  final VoidCallback? onPressed; // Add onPressed parameter to handle tap action
+import 'package:flutter/material.dart';
 
-  const CreateAccountButton(
-      {super.key, this.onPressed}); // Accept the onPressed callback
+class CreateAccountButton extends StatelessWidget {
+  final VoidCallback? onPressed; // Callback for tap action
+
+  const CreateAccountButton({super.key, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final width = size.width; // Screen width
+    final height = size.height; // Screen height
+
     return GestureDetector(
       onTap: onPressed, // Call the onPressed callback when tapped
       child: Container(
-        width: 275, // Set width
-        height: 52, // Set height
+        width: width*0.67,
+        height: height*0.06,
         decoration: BoxDecoration(
           color: Colors.white, // Background color
           borderRadius: BorderRadius.circular(12), // Slightly curved edges
@@ -29,12 +34,12 @@ class CreateAccountButton extends StatelessWidget {
             ),
           ],
         ),
-        child: const Center(
+        child: Center(
           child: Text(
             'Create an Account',
             style: TextStyle(
               fontFamily: 'Poppins',
-              fontSize: 16, // Font size
+              fontSize: width * 0.04, // Font size relative to screen width
               fontWeight: FontWeight.w600, // Font weight
               color: Colors.black, // Text color
             ),

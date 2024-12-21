@@ -8,7 +8,7 @@ class CustomButton extends StatelessWidget {
   const CustomButton({
     super.key,
     required this.text,
-     required this.onPressed, // Remove required since it is optional now
+    required this.onPressed, // Remove required since it is optional now
   });
 
   @override
@@ -18,8 +18,8 @@ class CustomButton extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed, // Provide a default empty callback if onPressed is null
       child: Container(
-        width: width*0.67,
-        height: height*0.06,
+        width: width * 0.67,
+        height: height * 0.06,
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             colors: AppColors.orangeGradient,
@@ -33,18 +33,18 @@ class CustomButton extends StatelessWidget {
           children: [
             Text(
               text,
-              style:  TextStyle(
-                fontSize: width*0.04,
+              style: TextStyle(
                 color: AppColors.white,
+                fontSize: width * 0.04,
                 fontFamily: 'Poppins', // Use the Poppins font
                 fontWeight: FontWeight.w600,
               ),
             ),
-             Padding(
-              padding: EdgeInsets.only(left: width*0.05),
+            Padding(
+              padding: EdgeInsets.only(left: width * 0.05),
               child: Icon(
                 Icons.arrow_forward,
-                size: width*0.05,
+                size: width * 0.05,
                 color: Colors.white,
               ),
             ),

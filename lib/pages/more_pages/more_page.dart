@@ -1,3 +1,4 @@
+import 'package:bima_gyaan/pages/login_screen/screen/login_screen.dart';
 import 'package:bima_gyaan/pages/more_pages/Announcements/announcements_screen.dart';
 import 'package:bima_gyaan/pages/more_pages/Gallery/gallery_screen.dart';
 import 'package:bima_gyaan/pages/more_pages/Presentations/presentations_screen.dart';
@@ -5,8 +6,11 @@ import 'package:bima_gyaan/pages/more_pages/faq_screen.dart';
 import 'package:bima_gyaan/pages/more_pages/forum_chat_screen.dart';
 import 'package:bima_gyaan/pages/more_pages/profile_screen.dart';
 import 'package:bima_gyaan/utils/colors.dart';
+import 'package:bima_gyaan/widgets/customeSncakBar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 class MorePage extends StatefulWidget {
   const MorePage({super.key});
@@ -198,6 +202,29 @@ class _MorePageState extends State<MorePage> {
     );
   }
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Future<void> logout() async {
+    try {
+      // Perform logout
+      await _auth.signOut();
+
+      // Navigate to Login Screen
+      Get.offAll(() => const LoginScreen());
+
+      // Show custom success snackbar
+      CustomSnackbarr.show(Get.context!, 'Success', 'Logged out successfully!');
+    } catch (e) {
+      // Show custom error snackbar
+      CustomSnackbarr.show(
+        Get.context!,
+        'Error',
+        'Failed to log out: ${e.toString()}',
+        isError: true,
+      );
+    }
+  }
+
   Widget buildExpandableMenuItem({
     required String title,
     required List<String> years,
@@ -305,7 +332,9 @@ class _MorePageState extends State<MorePage> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 40.w),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          logout();
+        },
         style: ElevatedButton.styleFrom(
           padding: EdgeInsets.symmetric(vertical: 15.h),
           backgroundColor: AppColors.orange,

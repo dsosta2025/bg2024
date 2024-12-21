@@ -1,14 +1,15 @@
+import 'package:bima_gyaan/widgets/customeSncakBar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
 class BookSlotController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  var selectedDate = "Date".obs;
   Future<void> addIndividualSlot({
     required String eventId,
     required String name,
     required String email,
-    required String date,
     required String uploadId,
   }) async {
     try {
@@ -19,13 +20,22 @@ class BookSlotController extends GetxController {
           .add({
         'name': name,
         'email': email,
-        'date': date,
+        'date': selectedDate.value,
         'uploadId': uploadId,
         'timestamp': FieldValue.serverTimestamp(),
       });
-      Get.snackbar("Success", "Individual slot booked successfully!");
+      CustomSnackbarr.show(
+        Get.context!,
+        "Success",
+        "Individual slot booked successfully!",
+      );
     } catch (e) {
-      Get.snackbar("Error", "Failed to book individual slot: $e");
+      CustomSnackbarr.show(
+        Get.context!,
+        "Error",
+        "Failed to book individual slot: $e",
+        isError: true,
+      );
     }
   }
 
@@ -33,7 +43,6 @@ class BookSlotController extends GetxController {
     required String eventId,
     required String name,
     required String email,
-    required String date,
     required String companyName,
     required String pax,
   }) async {
@@ -45,14 +54,23 @@ class BookSlotController extends GetxController {
           .add({
         'name': name,
         'email': email,
-        'date': date,
+        'date': selectedDate.value,
         'companyName': companyName,
         'pax': pax,
         'timestamp': FieldValue.serverTimestamp(),
       });
-      Get.snackbar("Success", "Organization slot booked successfully!");
+      CustomSnackbarr.show(
+        Get.context!,
+        "Success",
+        "Organization slot booked successfully!",
+      );
     } catch (e) {
-      Get.snackbar("Error", "Failed to book organization slot: $e");
+      CustomSnackbarr.show(
+        Get.context!,
+        "Error",
+        "Failed to book organization slot: $e",
+        isError: true,
+      );
     }
   }
 }
