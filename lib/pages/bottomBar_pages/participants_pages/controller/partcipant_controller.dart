@@ -12,6 +12,7 @@ class ParticipantsController extends GetxController {
   RxBool isLoading = true.obs;
   RxBool isOverLoading = true.obs;
   RxString errorMessage = ''.obs;
+  RxString errorMessageForChat = ''.obs;
 
   @override
   void onInit() {
@@ -20,7 +21,7 @@ class ParticipantsController extends GetxController {
   }
 
   // Method to fetch users, excluding the current user
- Future<void> fetchUsers() async {
+  Future<void> fetchUsers() async {
     try {
       isLoading(true);
       errorMessage('');
@@ -52,21 +53,23 @@ class ParticipantsController extends GetxController {
       isLoading(false);
     }
   }
+
   RxList<UserModel> userList = <UserModel>[].obs; // Only store UserModel
+
   Future<void> fetchChatUsersWithChatRoomIds() async {
     isOverLoading(true); // Start loading
-    errorMessage('');    // Clear previous error
+    errorMessageForChat(''); // Clear previous error
 
     try {
       String currentUserId = auth.currentUser?.uid ?? '';
       if (currentUserId.isEmpty) {
-        errorMessage('User not signed in.');
+        errorMessageForChat('User not signed in.');
         return;
       }
 
       final FirebaseFirestore firestore = FirebaseFirestore.instance;
       DocumentSnapshot currentUserDoc =
-      await firestore.collection('users').doc(currentUserId).get();
+          await firestore.collection('users').doc(currentUserId).get();
 
       if (!currentUserDoc.exists) {
         throw Exception("Current user not found.");
@@ -79,7 +82,7 @@ class ParticipantsController extends GetxController {
         userList.clear();
         for (String chatRoomId in chatRoomsIdList) {
           DocumentSnapshot chatRoomDoc =
-          await firestore.collection('chatRooms').doc(chatRoomId).get();
+              await firestore.collection('chatRooms').doc(chatRoomId).get();
 
           if (!chatRoomDoc.exists) {
             continue;
@@ -89,8 +92,8 @@ class ParticipantsController extends GetxController {
             chatRoomDoc.data() as Map<String, dynamic>,
           );
           Participant? otherParticipant =
-          chatRoom.participants?.firstWhereOrNull(
-                (participant) => participant.userId != currentUserId,
+              chatRoom.participants?.firstWhereOrNull(
+            (participant) => participant.userId != currentUserId,
           );
 
           if (otherParticipant == null) {
@@ -111,20 +114,15 @@ class ParticipantsController extends GetxController {
           }
         }
       } else {
-        errorMessage('Error: chatRoomsIdList is not a valid list.');
+        errorMessageForChat('Error: chatRoomsIdList is not a valid list.');
       }
     } catch (e) {
-      errorMessage('Failed to fetch chats: $e');
+      errorMessageForChat('Failed to fetch chats: $e');
     } finally {
       isOverLoading(false); // Stop loading
     }
   }
-
-
-
-
 }
-
 
 // Future<void> fetchChatUsersWithChatRoomIds() async {
 //   String currentUserId = auth.currentUser!.uid;

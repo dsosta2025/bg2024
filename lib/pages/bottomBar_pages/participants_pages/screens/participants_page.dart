@@ -112,11 +112,11 @@ class _ParticipantsPageState extends State<ParticipantsPage>
             color: Colors.white,
           ),
         );
-      } else if (controller.errorMessage.isNotEmpty) {
+      } else if (controller.errorMessageForChat.isNotEmpty) {
         // Show error message if there's an error
         return Center(
           child: Text(
-            controller.errorMessage.value,
+            controller.errorMessageForChat.value,
             style: const TextStyle(color: Colors.red, fontSize: 16),
             textAlign: TextAlign.center,
           ),
