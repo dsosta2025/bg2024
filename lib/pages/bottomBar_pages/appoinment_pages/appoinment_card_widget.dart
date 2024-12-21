@@ -45,15 +45,33 @@ class AppoinmentCardWidget extends StatelessWidget {
       ),
       child: Row(
         children: [
+          // Container(
+          //   width: width * 0.25,
+          //   height: height * 0.16,
+          //   decoration: BoxDecoration(
+          //       color: Colors.red,
+          //       borderRadius: BorderRadius.circular(width * 0.05)),
+          // ),
+          // SizedBox(width: width * 0.035),
           Container(
             width: width * 0.25,
             height: height * 0.16,
             decoration: BoxDecoration(
-                color: Colors.red,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(width * 0.05)),
+            child: imageUrl.isNotEmpty
+                ? Image.network(imageUrl)
+                : Padding(
+              padding: EdgeInsets.symmetric(horizontal: width * 0.03),
+              child: Image.asset(
+                "lib/assets/user.png",
+              ),
+            ),
           ),
-          SizedBox(width: width * 0.035),
-          Container(
+          SizedBox(
+            width: width * 0.035,
+          ),
+          SizedBox(
             width: width * 0.55,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

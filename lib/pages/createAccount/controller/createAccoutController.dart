@@ -30,12 +30,10 @@ class SignUpController extends GetxController {
         password: password,
       );
 
-      // Get the UID of the created user
       String uid = userCredential.user!.uid;
 
       print('User created with UID: $uid');
 
-      // Save user data to Firestore
       Map<String, dynamic> userData = {
         'uid': uid,
         'fullName': fullName,
@@ -45,6 +43,7 @@ class SignUpController extends GetxController {
         'designation': designation,
         'createdAt': FieldValue.serverTimestamp(),
         'imageUrl': '',
+        'chatRoomsIdList': []
       };
 
       await _firestore.collection('users').doc(uid).set(userData).then((_) {

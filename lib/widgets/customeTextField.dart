@@ -82,66 +82,7 @@ class _MyTextFeildState extends State<MyTextFeild> {
             ),
           ),
 
-          // decoration: InputDecoration(
-          //   suffixIcon: widget.validator == 'Password'
-          //       ? IconButton(
-          //           onPressed: () {
-          //             setState(() {
-          //               observeTextField = !observeTextField;
-          //             });
-          //           },
-          //           icon: Icon(
-          //             observeTextField
-          //                 ? Icons.remove_red_eye_outlined
-          //                 : Icons.remove_red_eye,
-          //             color: AppColors.orange2,
-          //             size: width * 0.06,
-          //           ),
-          //         )
-          //       : widget.suffix ?? const SizedBox(),
-          //   floatingLabelBehavior: FloatingLabelBehavior.never,
-          //   hintText: widget.hintText,
-          //   hintStyle: GoogleFonts.manrope(
-          //     color: AppColor.primaryColor1,
-          //     fontSize: width * 0.03,
-          //     fontWeight: FontWeight.w700,
-          //   ),
-          //   contentPadding: EdgeInsets.only(top: 0, left: width * 0.035),
-          //   hoverColor: AppColor.primaryColor1,
-          //   border: OutlineInputBorder(
-          //     borderSide: BorderSide(
-          //       color: AppColor.primaryColor1,
-          //       width: 1.4,
-          //     ),
-          //   ),
-          //   disabledBorder: OutlineInputBorder(
-          //     borderSide: BorderSide(
-          //       color: AppColor.primaryColor1,
-          //       width: 1.4,
-          //     ),
-          //   ),
-          //   enabledBorder: OutlineInputBorder(
-          //     borderSide: BorderSide(
-          //       color: AppColor.primaryColor1,
-          //       width: 1.4,
-          //     ),
-          //   ),
-          //   focusedBorder: OutlineInputBorder(
-          //     borderSide: BorderSide(
-          //       color: AppColor.primaryColor1,
-          //       width: 1.4,
-          //     ),
-          //   ),
-          //   errorBorder: OutlineInputBorder(
-          //     borderSide: BorderSide(
-          //       color: Colors.red,
-          //       width: 1.4,
-          //     ),
-          //   ),
-          //   fillColor: widget.fillColor ?? Colors.transparent,
-          //   filled: true,
-          //   focusColor: Colors.black,
-          // ),
+
           validator: (value) {
             if (widget.validator == "Password") {
               if (value == null || value.isEmpty) {
@@ -212,14 +153,10 @@ class _MyTextFeildState extends State<MyTextFeild> {
               }
               return null;
             }
-            // else if (widget.validator == "Name") {
-            //   // Phone number validation: 10 digits
-            //   final usernameRegExp = RegExp(r'^[a-zA-Z0-9_]+$');
-            //   if (!usernameRegExp.hasMatch(value!)) {
-            //     return 'Name  can only contain letters, numbers, and underscores';
-            //   }
-            //   return null;
-            // }
+            else if (widget.validator == "optional") {
+              // Phone number validation: 10 digits
+              return null;
+            }
             else if (value == null || value.isEmpty) {
               // _debouncer.run(() {
               //
@@ -243,3 +180,63 @@ class _MyTextFeildState extends State<MyTextFeild> {
     );
   }
 }
+// decoration: InputDecoration(
+//   suffixIcon: widget.validator == 'Password'
+//       ? IconButton(
+//           onPressed: () {
+//             setState(() {
+//               observeTextField = !observeTextField;
+//             });
+//           },
+//           icon: Icon(
+//             observeTextField
+//                 ? Icons.remove_red_eye_outlined
+//                 : Icons.remove_red_eye,
+//             color: AppColors.orange2,
+//             size: width * 0.06,
+//           ),
+//         )
+//       : widget.suffix ?? const SizedBox(),
+//   floatingLabelBehavior: FloatingLabelBehavior.never,
+//   hintText: widget.hintText,
+//   hintStyle: GoogleFonts.manrope(
+//     color: AppColor.primaryColor1,
+//     fontSize: width * 0.03,
+//     fontWeight: FontWeight.w700,
+//   ),
+//   contentPadding: EdgeInsets.only(top: 0, left: width * 0.035),
+//   hoverColor: AppColor.primaryColor1,
+//   border: OutlineInputBorder(
+//     borderSide: BorderSide(
+//       color: AppColor.primaryColor1,
+//       width: 1.4,
+//     ),
+//   ),
+//   disabledBorder: OutlineInputBorder(
+//     borderSide: BorderSide(
+//       color: AppColor.primaryColor1,
+//       width: 1.4,
+//     ),
+//   ),
+//   enabledBorder: OutlineInputBorder(
+//     borderSide: BorderSide(
+//       color: AppColor.primaryColor1,
+//       width: 1.4,
+//     ),
+//   ),
+//   focusedBorder: OutlineInputBorder(
+//     borderSide: BorderSide(
+//       color: AppColor.primaryColor1,
+//       width: 1.4,
+//     ),
+//   ),
+//   errorBorder: OutlineInputBorder(
+//     borderSide: BorderSide(
+//       color: Colors.red,
+//       width: 1.4,
+//     ),
+//   ),
+//   fillColor: widget.fillColor ?? Colors.transparent,
+//   filled: true,
+//   focusColor: Colors.black,
+// ),

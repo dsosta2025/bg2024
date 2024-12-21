@@ -6,6 +6,7 @@ class UserModel {
   final String organization;
   final String phone;
   final String imageUrl;
+  final List<String> chatRoomsIdList;
 
   UserModel({
     required this.uid,
@@ -15,6 +16,7 @@ class UserModel {
     required this.organization,
     required this.phone,
     required this.imageUrl,
+    required this.chatRoomsIdList,
   });
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
@@ -26,6 +28,10 @@ class UserModel {
       organization: map['organization'] ?? '',
       phone: map['phone'] ?? '',
       imageUrl: map['imageUrl'] ?? '',
+      // Ensuring chatRoomsIdList is always a List<String>, even if it's null or empty
+      chatRoomsIdList: map['chatRoomsIdList'] is List
+          ? List<String>.from(map['chatRoomsIdList'].where((item) => item is String))
+          : [],
     );
   }
 }

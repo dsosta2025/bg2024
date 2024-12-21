@@ -11,7 +11,7 @@ import 'package:intl/intl.dart'; // For formatting the date if needed
 class ScheduleScreen extends StatelessWidget {
   ScheduleScreen({super.key, required this.opponentUserId});
 
-  String opponentUserId;
+  final String opponentUserId;
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +20,8 @@ class ScheduleScreen extends StatelessWidget {
 
     // GetX controller
     final AppointmentScheduleController appointmentController =
-        Get.put(AppointmentScheduleController());
-
+    Get.put(AppointmentScheduleController());
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     var spacer = SizedBox(
       height: height * 0.03,
     );
@@ -32,46 +32,100 @@ class ScheduleScreen extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.symmetric(
               vertical: height * 0.03, horizontal: width * 0.05),
-          child: Column(
-            children: [
-              spacer,
-              buildDataContainer(width, height, context, appointmentController),
-              spacer,
-              MyTextFeild(
-                hintText: 'Subject',
-                controller: appointmentController.subjectController,
-              ),
-              spacer,
-              MyTextFeild(
-                hintText: 'Description',
-                controller: appointmentController.descriptionController,
-              ),
-              spacer,
-              MyTextFeild(
-                hintText: 'Meeting link (optional)',
-                controller: appointmentController.meetingLinkController,
-              ),
-              spacer,
-              MyTextFeild(
-                hintText: 'Meeting Venue (optional).',
-                controller: appointmentController.meetingVenueController,
-              ),
-              spacer,
-              spacer,
-              CustomButton(
-                text: 'Schedule',
-                onPressed: () {
-                  // Assuming the current user ID is stored in 'currentUserId'
-                  // String currentUserId =
-                  //     "currentUser123"; // Replace with actual current user ID
-                  // String opponentUserId =
-                  //     "otherUser456"; // Replace with actual opponent user ID
+          child: Form(
+            key: formKey,
+            child: Column(
+              children: [
+                spacer,
+                buildDataContainer(width, height, context, appointmentController),
+                spacer,
+                MyTextFeild(
+                  hintText: 'Subject',
+                  controller: appointmentController.subjectController,
+                  validator: '',
+                ),
+                spacer,
+                MyTextFeild(
+                  hintText: 'Description',
+                  controller: appointmentController.descriptionController,
+                  validator: '',
 
-                  // Pass only two participants (currentUser and opponentUser) to the controller
-                  appointmentController.createAppointment(opponentUserId);
-                },
-              ),
-            ],
+                ),
+                spacer,
+                MyTextFeild(
+                  hintText: 'Meeting link (optional)',
+                  controller: appointmentController.meetingLinkController,
+                  validator: 'optional',
+
+                ),
+                spacer,
+                MyTextFeild(
+                  hintText: 'Meeting Venue (optional).',
+                  controller: appointmentController.meetingVenueController,
+                  validator: 'optional',
+                ),
+                spacer,
+                spacer,
+                Obx(() {
+                  return appointmentController.isLoading.value
+                      ? CircularProgressIndicator()
+                      : CustomButton(
+                    text: 'Schedule',
+                    onPressed: () async {
+                      // Check if the formKey's currentState is not null before calling validate
+                      if (formKey.currentState != null && formKey.currentState!.validate()) {
+                        await appointmentController.createAppointment(opponentUserId);
+
+                        // Clear the text fields after appointment creation
+                        appointmentController.subjectController.clear();
+                        appointmentController.descriptionController.clear();
+                        appointmentController.meetingLinkController.clear();
+                        appointmentController.meetingVenueController.clear();
+
+                        // Pop the screen back to previous
+                        Navigator.of(context).pop();
+                      }
+                    },
+                  );
+                }),
+
+                // Obx(() {
+                //   return appointmentController.isLoading.value
+                //       ? CircularProgressIndicator()
+                //       : CustomButton(
+                //     text: 'Schedule',
+                //     onPressed: () async {
+                //       if(formKey.currentState!.validate()) {
+                //         await appointmentController.createAppointment(
+                //             opponentUserId);
+                //       }
+                //
+                //       // Clear the text fields after appointment creation
+                //       appointmentController.subjectController.clear();
+                //       appointmentController.descriptionController.clear();
+                //       appointmentController.meetingLinkController.clear();
+                //       appointmentController.meetingVenueController.clear();
+                //
+                //       // Pop the screen back to previous
+                //       Navigator.of(context).pop();
+                //     },
+                //   );
+                // }),
+                // Display error message if there is an error
+                Obx(() {
+                  if (appointmentController.hasError.value) {
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: Text(
+                        appointmentController.errorMessage.value,
+                        style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                      ),
+                    );
+                  }
+                  return SizedBox.shrink(); // Empty widget if no error
+                }),
+              ],
+            ),
           ),
         ),
       ),
@@ -91,7 +145,7 @@ class ScheduleScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Obx(
-            () => Text(
+                () => Text(
               controller.selectedDate.value,
               style: TextStyle(
                 color: Colors.grey,
@@ -111,7 +165,6 @@ class ScheduleScreen extends StatelessWidget {
               );
               if (selectedDate != null) {
                 // Update the controller's text field with the selected date
-                print(controller.selectedDate.value);
                 controller.selectedDate.value =
                     DateFormat('yyyy-MM-dd').format(selectedDate);
               }
@@ -125,6 +178,7 @@ class ScheduleScreen extends StatelessWidget {
       ),
     );
   }
+}
 // Widget buildDataContainer(double width, double height, BuildContext context, AppointmentScheduleController controller) {
 //   return Container(
 //     padding: EdgeInsets.symmetric(
@@ -164,7 +218,6 @@ class ScheduleScreen extends StatelessWidget {
 //     ),
 //   );
 // }
-}
 
 // class ScheduleScreen extends StatelessWidget {
 //   const ScheduleScreen({super.key});

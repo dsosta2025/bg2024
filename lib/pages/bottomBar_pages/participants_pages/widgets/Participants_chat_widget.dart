@@ -1,9 +1,6 @@
-import 'package:bima_gyaan/widgets/customeButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../../../utils/colors.dart';
-
 class ParticipantsChatWidget extends StatelessWidget {
   final String name;
   final String message;
@@ -12,22 +9,22 @@ class ParticipantsChatWidget extends StatelessWidget {
   final String imageUrl; // Optional additional text
   final VoidCallback onTap;
 
-  const ParticipantsChatWidget({
-    super.key,
-    required this.name,
-    required this.message,
-    required this.post,
-    required this.webAddress,
-    required this.imageUrl,
-    required this.onTap
-  });
+  const ParticipantsChatWidget(
+      {super.key,
+      required this.name,
+      required this.message,
+      required this.post,
+      required this.webAddress,
+      required this.imageUrl,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.sizeOf(context).width;
     var height = MediaQuery.sizeOf(context).height;
     return Container(
-      padding: EdgeInsets.symmetric(vertical: height*0.02,horizontal: width*0.05),
+      padding: EdgeInsets.symmetric(
+          vertical: height * 0.02, horizontal: width * 0.05),
       decoration: BoxDecoration(
         color: AppColors.lightPeach,
         borderRadius: BorderRadius.circular(20.r),
@@ -36,13 +33,23 @@ class ParticipantsChatWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            width: width * 0.22,
-            height: height * 0.13,
+            width: width * 0.25,
+            height: height * 0.16,
             decoration: BoxDecoration(
-                color: Colors.red,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(width * 0.05)),
+            child: imageUrl.isNotEmpty
+                ? Image.network(imageUrl)
+                : Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.03),
+                    child: Image.asset(
+                      "lib/assets/user.png",
+                    ),
+                  ),
           ),
-        
+          SizedBox(
+            width: width * 0.035,
+          ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -56,8 +63,6 @@ class ParticipantsChatWidget extends StatelessWidget {
                 ),
               ),
               SizedBox(height: height * 0.005),
-
-
               Row(
                 children: [
                   Text(
@@ -89,14 +94,15 @@ class ParticipantsChatWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: height*0.015,),
+              SizedBox(
+                height: height * 0.015,
+              ),
               Container(
                 width: 180.w,
-                padding: EdgeInsets.symmetric(vertical: 8.h,horizontal: 8.w),
+                padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 8.w),
                 decoration: BoxDecoration(
                     color: Colors.grey.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(10.w)
-                ),
+                    borderRadius: BorderRadius.circular(10.w)),
                 child: Text(
                   message,
                   style: TextStyle(
@@ -112,12 +118,15 @@ class ParticipantsChatWidget extends StatelessWidget {
           InkWell(
             onTap: onTap,
             child: Container(
-              padding: EdgeInsets.all(width*0.015),
+              padding: EdgeInsets.all(width * 0.015),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(width*0.025),
-                gradient: AppColors.getOrangeGradient()
+                  borderRadius: BorderRadius.circular(width * 0.025),
+                  gradient: AppColors.getOrangeGradient()),
+              child: Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: width * 0.06,
+                color: AppColors.white,
               ),
-              child: Icon(Icons.arrow_forward_ios_rounded,size: width*0.06,color: AppColors.white,),
             ),
           )
         ],
