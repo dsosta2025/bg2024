@@ -1,10 +1,11 @@
+import 'dart:convert';
+
 import 'package:bima_gyaan/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SessionSpeakerCard extends StatelessWidget {
   final String name;
-  final String fromTime;
   final String toTime; // Optional additional text
   final String address; // Optional additional text
   final String imageUrl; // Optional additional text
@@ -12,7 +13,6 @@ class SessionSpeakerCard extends StatelessWidget {
   const SessionSpeakerCard({
     super.key,
     required this.name,
-    required this.fromTime,
     required this.toTime,
     required this.address,
     required this.imageUrl,
@@ -32,11 +32,19 @@ class SessionSpeakerCard extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: width * 0.4,
-            height: height * 0.2,
+            width: width * 0.35,
+            height: height * 0.16,
             decoration: BoxDecoration(
-                color: Colors.red,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(width * 0.05)),
+            child: imageUrl.isNotEmpty
+                ? Image.memory(base64Decode(imageUrl), fit: BoxFit.contain,)
+                : Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.03),
+                    child: Image.asset(
+                      "lib/assets/user.png",
+                    ),
+                  ),
           ),
           SizedBox(
             width: width * 0.035,
@@ -44,18 +52,20 @@ class SessionSpeakerCard extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "${fromTime} - ${toTime}",
-                style: TextStyle(
-                  fontFamily: 'poppins',
-                  fontSize: width * 0.04,
-                  fontWeight: FontWeight.w400,
+              SizedBox(
+                width: width * 0.43,
+                child: Text(
+                  toTime,
+                  style: TextStyle(
+                    fontFamily: 'poppins',
+                    fontSize: width * 0.037,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ),
               SizedBox(height: height * 0.01),
-
               SizedBox(
-                width: width * 0.2,
+                width: width * 0.43,
                 child: Text(
                   name,
                   style: TextStyle(
@@ -67,12 +77,15 @@ class SessionSpeakerCard extends StatelessWidget {
                 ),
               ),
               SizedBox(height: height * 0.01),
-              Text(
-                address,
-                style: TextStyle(
-                  fontFamily: 'poppins',
-                  fontSize: width * 0.04,
-                  fontWeight: FontWeight.w400,
+              SizedBox(
+                width: width * 0.43,
+                child: Text(
+                  address,
+                  style: TextStyle(
+                    fontFamily: 'poppins',
+                    fontSize: width * 0.04,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ),
               // SizedBox(height: height * 0.003),

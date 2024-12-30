@@ -14,26 +14,16 @@ class ParticipantsController extends GetxController {
   RxString errorMessage = ''.obs;
   RxString errorMessageForChat = ''.obs;
 
-  @override
-  void onInit() {
-    fetchUsers();
-    super.onInit();
-  }
 
-  // Method to fetch users, excluding the current user
   Future<void> fetchUsers() async {
     try {
       isLoading(true);
       errorMessage('');
-
-      // Get the current user's ID
       String currentUserId = auth.currentUser?.uid ?? '';
-
       if (currentUserId.isEmpty) {
         errorMessage('No user is currently signed in.');
         return;
       }
-
       // Fetch users from Firestore, excluding the current user
       final querySnapshot = await _firestore
           .collection('users')
@@ -53,7 +43,11 @@ class ParticipantsController extends GetxController {
       isLoading(false);
     }
   }
-
+  @override
+  void onInit() {
+    fetchUsers();
+    super.onInit();
+  }
   RxList<UserModel> userList = <UserModel>[].obs; // Only store UserModel
 
   Future<void> fetchChatUsersWithChatRoomIds() async {

@@ -32,8 +32,10 @@ class _AppoinmentPageState extends State<AppoinmentPage>
     appointmentController.appointments.refresh();
   }
 
+
   Widget _buildAppointmentList(List<AppointmentModel> appointments,
       String emptyMessage, String currentUserId) {
+    print(appointmentController.hasError.value);
     return RefreshIndicator(
       color: AppColors.orange2,
       onRefresh: _refreshAppointments,
@@ -43,7 +45,8 @@ class _AppoinmentPageState extends State<AppoinmentPage>
                 color: Colors.white,
               ),
             )
-          : appointmentController.errorMessage.isNotEmpty
+          : appointmentController.errorMessage.isNotEmpty &&
+                  appointmentController.hasError.value
               ? Center(
                   child: Text(
                     appointmentController.errorMessage.value,

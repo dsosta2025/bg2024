@@ -2,23 +2,24 @@ import 'package:bima_gyaan/pages/login_screen/screen/login_screen.dart';
 import 'package:bima_gyaan/pages/more_pages/Announcements/announcements_screen.dart';
 import 'package:bima_gyaan/pages/more_pages/Gallery/gallery_screen.dart';
 import 'package:bima_gyaan/pages/more_pages/Presentations/presentations_screen.dart';
+import 'package:bima_gyaan/pages/more_pages/aboutBigGyaan/screen/aboutScreen.dart';
 import 'package:bima_gyaan/pages/more_pages/faq_screen.dart';
+import 'package:bima_gyaan/pages/more_pages/feedbackSection/screens/feedbackScreen.dart';
 import 'package:bima_gyaan/pages/more_pages/forum_chat_screen.dart';
-import 'package:bima_gyaan/pages/more_pages/profile_screen.dart';
+import 'package:bima_gyaan/pages/more_pages/profileSection/screens/profile_screen.dart';
+import 'package:bima_gyaan/pages/more_pages/qnaSection/screens/qnaScreen.dart';
 import 'package:bima_gyaan/utils/colors.dart';
 import 'package:bima_gyaan/widgets/customeSncakBar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
 class MorePage extends StatefulWidget {
-  const MorePage({super.key});
-
+  String evenId;
+  MorePage({super.key, required this.evenId});
   @override
   State<MorePage> createState() => _MorePageState();
 }
-
 class _MorePageState extends State<MorePage> {
   // Track expanded sections
   bool isGalleryExpanded = false;
@@ -159,11 +160,11 @@ class _MorePageState extends State<MorePage> {
                   buildDivider(),
                   buildMenuItem(
                     Icons.chat,
-                    "Forum Chat",
+                    "Q&A",
                     onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (builder) => const ForumChatScreen(),
+                        builder: (builder) =>  QAScreen(),
                       ),
                     ),
                   ),
@@ -174,7 +175,7 @@ class _MorePageState extends State<MorePage> {
                     onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (builder) => const AnnouncementsScreen(),
+                        builder: (builder) =>  AnnouncementsScreen(),
                       ),
                     ),
                   ),
@@ -185,12 +186,36 @@ class _MorePageState extends State<MorePage> {
                     onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (builder) => const FaqScreen(),
+                        builder: (builder) =>  FAQScreen(),
                       ),
                     ),
                   ),
                   buildDivider(),
-                  SizedBox(height: 50.h),
+                  buildMenuItem(
+                    Icons.account_balance_outlined,
+                    "About BimaGyaan",
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (builder) => AboutScreen(),
+                      ),
+                    ),
+                  ),
+                  buildDivider(),
+                  buildMenuItem(
+                    Icons.feedback,
+                    "Feedback",
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (builder) => FeedbackScreen(
+                          eventId: widget.evenId,
+                        ),
+                      ),
+                    ),
+                  ),
+                  buildDivider(),
+                  SizedBox(height: 20.h),
                   buildLogoutButton(),
                   SizedBox(height: 30.h),
                 ],
@@ -201,9 +226,7 @@ class _MorePageState extends State<MorePage> {
       ),
     );
   }
-
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
   Future<void> logout() async {
     try {
       // Perform logout
@@ -224,7 +247,6 @@ class _MorePageState extends State<MorePage> {
       );
     }
   }
-
   Widget buildExpandableMenuItem({
     required String title,
     required List<String> years,

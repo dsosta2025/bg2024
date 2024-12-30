@@ -14,19 +14,15 @@ import '../../home_pages/session_speaker_card.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key, required this.eventId, required this.eventYear});
-
   String eventId;
   String eventYear;
-
   @override
   State<HomePage> createState() => _HomePageState();
 }
-
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   HomeController controller = Get.put(HomeController());
-
   @override
   void initState() {
     _tabController = TabController(length: 3, vsync: this);
@@ -34,13 +30,14 @@ class _HomePageState extends State<HomePage>
     controller.fetchSchedules(widget.eventId);
     super.initState();
   }
-
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
   }
-
+  bool containsBreak(String input) {
+    return input.toLowerCase().contains('break');
+  }
   late var speakersTab;
   bool istap = true;
   final List<Map<String, String>> scheduleData = [
@@ -108,6 +105,9 @@ class _HomePageState extends State<HomePage>
     var width = MediaQuery.sizeOf(context).width;
     var height = MediaQuery.sizeOf(context).height;
     controller.fetchSchedules(widget.eventId);
+    controller.fetchSpeakers(widget.eventId);
+    controller.fetchSponsors(widget.eventId);
+    // controller.fetchSessions("documentId");
     final scheduleTab = Obx(() {
       if (controller.isLoading.value) {
         // Loading state
@@ -171,96 +171,374 @@ class _HomePageState extends State<HomePage>
       }
     });
 
+
+
     if (istap) {
-      speakersTab = ListView.builder(
-        padding: EdgeInsets.symmetric(
-            horizontal: width * 0.04, vertical: height * 0.02),
-        itemCount: speakersData.length,
-        itemBuilder: (context, index) {
-          final item = speakersData[index];
-          return InkWell(
-            onTap: () {
-              istap = false;
-              setState(() {
-                speakersTab = ListView.builder(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: width * 0.04, vertical: height * 0.02),
-                  itemCount: sponsorsData.length,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (index == 0)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              IconButton(
-                                  onPressed: () {
-                                    istap = true;
-                                    setState(() {});
-                                  },
-                                  icon: const Icon(
-                                    Icons.arrow_back_ios,
-                                    color: AppColors.white,
-                                  )),
-                              SizedBox(
-                                width: width * 0.25,
-                              ),
-                              Text(
-                                "Session 1",
-                                style: TextStyle(
-                                  fontFamily: 'poppins',
-                                  fontSize: width * 0.047,
-                                  color: AppColors.white,
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              ),
-                            ],
-                          ),
-                        SizedBox(
-                          height: height * 0.03,
-                        ),
-                        const SessionSpeakerCard(
-                          imageUrl: '',
-                          name: 'Bessie Cooper',
-                          toTime: '9:25 am',
-                          fromTime: '9:15 am',
-                          address: 'Mitsubishi',
-                        )
-                      ],
-                    );
-                  },
-                );
-              });
-            },
+      speakersTab
+
+
+      = Obx(() {
+        if (controller.isLoadingSpeakers.value) {
+          return const Center(
+              child: CircularProgressIndicator(
+            color: Colors.white,
+          ));
+        } else if (controller.hasErrorSpeakers.value) {
+          return Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Speakers(
-                  sessionName: item["sessionName"]!,
-                  time: item["time"]!,
+                Icon(Icons.error, color: Colors.redAccent, size: 40.w),
+                SizedBox(height: 10.h),
+                Text(
+                  controller.errorMessageSpeakers.value,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 19.sp,
+                    color: Colors.redAccent,
+                  ),
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: 10.h),
+                ElevatedButton(
+                  onPressed: () => controller.fetchSpeakers(widget.eventId),
+                  child: const Text("Retry"),
+                ),
               ],
             ),
           );
-        },
-      );
-    }
-    final sponsorsTab = ListView.builder(
-      padding: EdgeInsets.symmetric(
-          horizontal: width * 0.04, vertical: height * 0.02),
-      itemCount: sponsorsData.length,
-      itemBuilder: (context, index) {
-        return Column(
-          children: [
-            Sponsors(
-              assetPath: sponsorsData[index],
+        } else if (controller.speakers.isEmpty) {
+          return Center(
+            child: Text(
+              'No speakers available.',
+              style: TextStyle(fontSize: 16.sp, color: Colors.white),
             ),
-            SizedBox(height: 20.h),
-          ],
+          );
+        } else {
+          return ListView.builder(
+            padding: EdgeInsets.symmetric(
+                horizontal: width * 0.04, vertical: height * 0.02),
+            itemCount: controller.speakers.length,
+            itemBuilder: (context, indexx) {
+              return InkWell(
+                onTap: containsBreak(
+                        controller.speakers.value[indexx].sessionName)
+                    ? null
+                    : () async {
+                        await controller.fetchSessions(
+                            controller.speakers.value[indexx].sessionId);
+                        istap = false;
+                        setState(() {
+                          speakersTab =
+                              Obx(() {
+                            if (controller.isLoadingSessions.value) {
+                              return Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      IconButton(
+                                        onPressed: () {
+                                          controller.sessions.value = [];
+                                          controller.sessions.refresh();
+                                          istap = true;
+                                          setState(() {});
+                                        },
+                                        icon: const Icon(
+                                          Icons.arrow_back_ios,
+                                          color: AppColors.white,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: width * 0.25,
+                                      ),
+                                      Text(
+                                        controller
+                                            .speakers.value[indexx].sessionName,
+                                        style: TextStyle(
+                                          fontFamily: 'poppins',
+                                          fontSize: width * 0.047,
+                                          color: AppColors.white,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: height * .2,
+                                  ),
+                                  CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                ],
+                              );
+                            } else if (controller.hasErrorSessions.value) {
+                              return Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {
+                                            controller.sessions.value = [];
+                                            controller.sessions.refresh();
+                                            istap = true;
+                                            setState(() {});
+                                          },
+                                          icon: const Icon(
+                                            Icons.arrow_back_ios,
+                                            color: AppColors.white,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: width * 0.25,
+                                        ),
+                                        Text(
+                                          controller.speakers.value[indexx]
+                                              .sessionName,
+                                          style: TextStyle(
+                                            fontFamily: 'poppins',
+                                            fontSize: width * 0.047,
+                                            color: AppColors.white,
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: height * .15,
+                                    ),
+                                    Icon(Icons.error,
+                                        color: Colors.redAccent, size: 40.w),
+                                    SizedBox(height: 10.h),
+                                    Text(
+                                      controller.errorMessageSessions.value,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 19.sp,
+                                        color: Colors.redAccent,
+                                      ),
+                                    ),
+                                    SizedBox(height: 10.h),
+                                    ElevatedButton(
+                                      onPressed: () => controller.fetchSessions(
+                                          controller.speakers.value[indexx]
+                                              .sessionId),
+                                      child: const Text("Retry"),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            } else if (controller.sessions.isEmpty) {
+                              return Center(
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {
+                                            controller.sessions.value = [];
+                                            controller.sessions.refresh();
+                                            istap = true;
+                                            setState(() {});
+                                          },
+                                          icon: const Icon(
+                                            Icons.arrow_back_ios,
+                                            color: AppColors.white,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: width * 0.25,
+                                        ),
+                                        Text(
+                                          controller.speakers.value[indexx]
+                                              .sessionName,
+                                          style: TextStyle(
+                                            fontFamily: 'poppins',
+                                            fontSize: width * 0.047,
+                                            color: AppColors.white,
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: height * .2,
+                                    ),
+                                    Text(
+                                      'No speakers available.',
+                                      style: TextStyle(
+                                          fontSize: 16.sp, color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            } else {
+                              return ListView.builder(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: width * 0.04,
+                                    vertical: height * 0.02),
+                                itemCount: controller.sessions.value.length,
+                                itemBuilder: (context, index) {
+                                  return Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      if (index == 0)
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            IconButton(
+                                              onPressed: () {
+                                                controller.sessions.value = [];
+                                                controller.sessions.refresh();
+                                                istap = true;
+                                                setState(() {});
+                                              },
+                                              icon: const Icon(
+                                                Icons.arrow_back_ios,
+                                                color: AppColors.white,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: width * 0.25,
+                                            ),
+                                            Text(
+                                              controller.speakers.value[indexx]
+                                                  .sessionName,
+                                              style: TextStyle(
+                                                fontFamily: 'poppins',
+                                                fontSize: width * 0.047,
+                                                color: AppColors.white,
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      SizedBox(
+                                        height: height * 0.03,
+                                      ),
+                                      SessionSpeakerCard(
+                                        imageUrl: controller
+                                            .sessions.value[index].imageUrl,
+                                        name: controller
+                                            .sessions.value[index].name,
+                                        toTime: controller
+                                            .sessions.value[index].time,
+                                        address: controller
+                                            .sessions.value[index].topic,
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
+                          });
+                        });
+                      },
+                child: Column(
+                  children: [
+                    Speakers(
+                      sessionName:
+                          controller.speakers.value[indexx].sessionName,
+                      time: controller.speakers.value[indexx].time,
+                      isBreak: containsBreak(
+                          controller.speakers.value[indexx].sessionName),
+                    ),
+                    SizedBox(height: 20.h),
+                  ],
+                ),
+              );
+            },
+          );
+        }
+      });
+    }
+
+
+
+
+    final sponsorsTab = Obx(() {
+      if (controller.isSponsorLoading.value) {
+        // Loading state
+        return const Center(
+            child: CircularProgressIndicator(
+          color: Colors.white,
+        ));
+      } else if (controller.hasSponsorError.value) {
+        // Error state
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.error, color: Colors.redAccent, size: 40.w),
+              SizedBox(height: 10.h),
+              Text(
+                controller.sponsorErrorMessage.value,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 19.sp,
+                  color: Colors.redAccent,
+                ),
+              ),
+              SizedBox(height: 10.h),
+              ElevatedButton(
+                onPressed: () => controller.fetchSponsors(widget.eventId),
+                child: const Text("Retry"),
+              ),
+            ],
+          ),
         );
-      },
-    );
+      } else if (controller.sponsors.isEmpty) {
+        // Empty state
+        return Center(
+          child: Text(
+            'No sponsors available.',
+            style: TextStyle(fontSize: 16.sp, color: Colors.white),
+          ),
+        );
+      } else {
+        // Success state (show sponsors list)
+        return ListView.builder(
+          padding: EdgeInsets.symmetric(
+            horizontal: MediaQuery.sizeOf(context).width * 0.04,
+            vertical: MediaQuery.sizeOf(context).height * 0.02,
+          ),
+          itemCount: controller.sponsors.length,
+          itemBuilder: (context, index) {
+            final sponsor = controller.sponsors.value[index];
+            return Column(
+              children: [
+                Sponsors(
+                  assetPath: sponsor.sponsorLogoPath,
+                ),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.025),
+              ],
+            );
+          },
+        );
+      }
+    });
+
+    // final sponsorsTab = ListView.builder(
+    //   padding: EdgeInsets.symmetric(
+    //       horizontal: width * 0.04, vertical: height * 0.02),
+    //   itemCount: sponsorsData.length,
+    //   itemBuilder: (context, index) {
+    //     return Column(
+    //       children: [
+    //         Sponsors(
+    //           assetPath: sponsorsData[index],
+    //         ),
+    //         SizedBox(height: 20.h),
+    //       ],
+    //     );
+    //   },
+    // );
     bool showButtons = int.parse(widget.eventYear) >= DateTime.now().year;
 
     return ReusableBackGroundScreen(
@@ -296,7 +574,9 @@ class _HomePageState extends State<HomePage>
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const BuySponsorScreen(),
+                          builder: (context) => BuySponsorScreen(
+                            eventId: widget.eventId,
+                          ),
                         ));
                   }),
             ]
@@ -304,7 +584,87 @@ class _HomePageState extends State<HomePage>
     );
   }
 }
-
+// if (istap) {
+//   speakersTab = Obx(() =>
+//       ListView.builder(
+//         padding: EdgeInsets.symmetric(
+//             horizontal: width * 0.04, vertical: height * 0.02),
+//         itemCount: controller.speakers.length,
+//         itemBuilder: (context, indexx) {
+//           return InkWell(
+//             onTap: () async {
+//               await controller.fetchSessions(
+//                   controller.speakers.value[indexx].sessionId);
+//               istap = false;
+//               setState(() {
+//                 speakersTab = ListView.builder(
+//                   padding: EdgeInsets.symmetric(
+//                       horizontal: width * 0.04, vertical: height * 0.02),
+//                   itemCount: controller.sessions.value.length,
+//                   itemBuilder: (context, index) {
+//                     return Column(
+//                       mainAxisAlignment: MainAxisAlignment.center,
+//                       children: [
+//                         if (index == 0)
+//                           Row(
+//                             mainAxisAlignment: MainAxisAlignment.start,
+//                             children: [
+//                               IconButton(
+//                                   onPressed: () {
+//                                     controller.sessions.value = [];
+//                                     controller.sessions.refresh();
+//                                     istap = true;
+//                                     setState(() {});
+//                                   },
+//                                   icon: const Icon(
+//                                     Icons.arrow_back_ios,
+//                                     color: AppColors.white,
+//                                   )),
+//                               SizedBox(
+//                                 width: width * 0.25,
+//                               ),
+//                               Text(
+//                                 controller
+//                                     .speakers.value[indexx].sessionName,
+//                                 style: TextStyle(
+//                                   fontFamily: 'poppins',
+//                                   fontSize: width * 0.047,
+//                                   color: AppColors.white,
+//                                   fontWeight: FontWeight.w800,
+//                                 ),
+//                               ),
+//                             ],
+//                           ),
+//                         SizedBox(
+//                           height: height * 0.03,
+//                         ),
+//                         SessionSpeakerCard(
+//                           imageUrl:
+//                           controller.sessions.value[index].imageUrl,
+//                           name: controller.sessions.value[index].name,
+//                           toTime: controller.sessions.value[index].time,
+//                           address: controller.sessions.value[index].topic,
+//                         )
+//                       ],
+//                     );
+//                   },
+//                 );
+//               });
+//             },
+//             child: Column(
+//               children: [
+//                 Speakers(
+//                   sessionName:
+//                   controller.speakers.value[indexx].sessionName,
+//                   time: controller.speakers.value[indexx].time,
+//                 ),
+//                 SizedBox(height: 20.h),
+//               ],
+//             ),
+//           );
+//         },
+//       ));
+// }
 
 // final scheduleTab = Obx(() => ListView.builder(
 //       padding: EdgeInsets.symmetric(

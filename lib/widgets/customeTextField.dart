@@ -94,34 +94,36 @@ class _MyTextFeildState extends State<MyTextFeild> {
                 return 'Password must be at least 6 characters long';
               }
               return null;
-            } else if (widget.validator == "Height") {
-              print('Height validation');
-              print(widget.controller?.text);
-              print(widget.heightFormat);
-              print(value);
-
-              if (value == null || value.isEmpty) {
-                return 'Please enter the Value';
-              }
-
-              // Regular expression to match numbers with up to 2 decimal places
-              final RegExp decimalRegExp = RegExp(r'^\d+(\.\d{1,2})?$');
-
-              if (!decimalRegExp.hasMatch(value)) {
-                return 'Please enter a valid height with up to 2 decimal places';
-              }
-              if (widget.heightFormat == 'cm') {
-                if (double.parse(value) < 60 || double.parse(value) > 304) {
-                  return 'Height must be between 60 and 304 cm';
-                }
-              } else if (widget.heightFormat == 'Feet') {
-                if (double.parse(value) < 2 || double.parse(value) > 10) {
-                  return 'Height must be between 2 and 10 Feet';
-                }
-              }
-
-              return null;
-            } else if (widget.validator == "Email") {
+            }
+            // else if (widget.validator == "Height") {
+            //   print('Height validation');
+            //   print(widget.controller?.text);
+            //   print(widget.heightFormat);
+            //   print(value);
+            //
+            //   if (value == null || value.isEmpty) {
+            //     return 'Please enter the Value';
+            //   }
+            //
+            //   // Regular expression to match numbers with up to 2 decimal places
+            //   final RegExp decimalRegExp = RegExp(r'^\d+(\.\d{1,2})?$');
+            //
+            //   if (!decimalRegExp.hasMatch(value)) {
+            //     return 'Please enter a valid height with up to 2 decimal places';
+            //   }
+            //   if (widget.heightFormat == 'cm') {
+            //     if (double.parse(value) < 60 || double.parse(value) > 304) {
+            //       return 'Height must be between 60 and 304 cm';
+            //     }
+            //   } else if (widget.heightFormat == 'Feet') {
+            //     if (double.parse(value) < 2 || double.parse(value) > 10) {
+            //       return 'Height must be between 2 and 10 Feet';
+            //     }
+            //   }
+            //
+            //   return null;
+            // }
+            else if (widget.validator == "Email") {
               final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
               if (!emailRegExp.hasMatch(value!)) {
                 return 'Please enter a valid email address';
@@ -137,16 +139,18 @@ class _MyTextFeildState extends State<MyTextFeild> {
               // final usernameRegExp = RegExp(r'^[a-zA-Z0-9_ ]+$');
               print(widget.validator);
               // final usernameRegExp = RegExp(r'^[a-zA-Z0-9_]+$');
-
+              // final usernameRegExp = RegExp(r'^[a-zA-Z]+( [a-zA-Z]+)*$');
               final usernameRegExp = RegExp(r'^[a-zA-Z]+( [a-zA-Z]+)*$');
 
-              print("(((((((+++++++++++++++++)))))))");
-              print(inputText.isEmpty);
-              if (inputText.trim().isEmpty) {
-                return 'Name cannot be empty';
-              }
-              print(widget.controller!.text.isEmpty);
-              print(value);
+              // final usernameRegExp = RegExp(r'^[a-zA-Z]+( [a-zA-Z]+)*$');
+
+              // print("(((((((+++++++++++++++++)))))))");
+              // print(inputText.isEmpty);
+              // if (inputText.trim().isEmpty) {
+              //   return 'Name cannot be empty';
+              // }
+              // print(widget.controller!.text.isEmpty);
+              // print(value);
               if (!usernameRegExp.hasMatch(value!) ||
                   inputText.trim().isEmpty) {
                 return 'Only letters and a single space between words are allowed';
@@ -169,9 +173,11 @@ class _MyTextFeildState extends State<MyTextFeild> {
               //   ));
               // });
               return 'Please enter the Value';
-            } else if (inputText.trim().isEmpty) {
-              return 'Filed Cannot be empty or only contain spaces ';
             }
+
+            // else if (inputText.trim().isEmpty) {
+            //   return 'Filed Cannot be empty or only contain spaces ';
+            // }
           },
           focusNode: widget.focusNode,
           onFieldSubmitted: widget.onSubmit,

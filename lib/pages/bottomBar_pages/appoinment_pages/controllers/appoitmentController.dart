@@ -10,6 +10,7 @@ class AppointmentController extends GetxController {
 
   RxList<AppointmentModel> appointments = <AppointmentModel>[].obs;
   RxBool isLoading = true.obs;
+  RxBool hasError = false.obs;
   RxString errorMessage = ''.obs;
 
   @override
@@ -37,9 +38,11 @@ class AppointmentController extends GetxController {
 
       if (querySnapshot.docs.isEmpty) {
         errorMessage('No appointments found for the current user.');
+        hasError.value = false;
+        return;
       } else {
+        hasError.value = false;
         List<AppointmentModel> appointmentList = [];
-
         for (var doc in querySnapshot.docs) {
           Map<String, dynamic> appointmentData =
               doc.data() as Map<String, dynamic>;
@@ -78,8 +81,10 @@ class AppointmentController extends GetxController {
       }
     } catch (e) {
       print(e);
+      hasError.value  = true;
       errorMessage('Failed to fetch appointments: $e');
     } finally {
+      // hasError.value  = true;
       isLoading(false);
     }
   }
@@ -107,8 +112,7 @@ class AppointmentController extends GetxController {
     }
   }
 
-  // Method to delete an appointment
-// Method to delete an appointment
+
   Future<void> deleteAppointment(String appointmentId) async {
     try {
       isLoading.value = true;

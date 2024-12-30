@@ -31,7 +31,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
       const ParticipantsPage(),
       const AppoinmentPage(),
       const EventsPage(),
-      const MorePage(),
+       MorePage(evenId: widget.eventId,),
     ];
   }
 

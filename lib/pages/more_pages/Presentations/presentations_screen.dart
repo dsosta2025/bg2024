@@ -7,6 +7,7 @@ import 'package:bima_gyaan/pages/more_pages/more_page.dart';
 import 'package:bima_gyaan/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 class PresentationsScreen extends StatelessWidget {
   const PresentationsScreen({super.key, required String year});
@@ -37,10 +38,12 @@ class PresentationsScreen extends StatelessWidget {
             left: 20.w,
             child: GestureDetector(
               onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MorePage()),
-                );
+                Get.back();
+
+                // Navigator.pushReplacement(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => const MorePage()),
+                // );
               },
               child: Row(
                 children: [

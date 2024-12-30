@@ -1,5 +1,5 @@
 import 'package:bima_gyaan/pages/createAccount/screens/create_account.dart';
-import 'package:bima_gyaan/pages/forget_password_screen.dart';
+import 'package:bima_gyaan/pages/more_pages/forgotPassword/screen/forget_password_screen.dart';
 import 'package:bima_gyaan/pages/login_screen/controller/loginController.dart';
 import 'package:bima_gyaan/utils/colors.dart';
 import 'package:bima_gyaan/utils/create_account_button.dart';

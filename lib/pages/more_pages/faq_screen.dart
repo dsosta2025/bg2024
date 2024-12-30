@@ -1,88 +1,148 @@
-import 'package:bima_gyaan/pages/more_pages/more_page.dart';
 import 'package:bima_gyaan/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
-class FaqScreen extends StatelessWidget {
-  const FaqScreen({super.key});
+class FAQScreen extends StatefulWidget {
+  @override
+  _FAQScreenState createState() => _FAQScreenState();
+}
+
+class _FAQScreenState extends State<FAQScreen> {
+  final List<Item> _items = [
+    Item(
+        header:
+            'If you could change careers right this second, what would you do?',
+        content:
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'),
+    Item(
+        header:
+            'Which of the Seven Wonders of the world do you want to visit the most?',
+        content: 'Details about Seven Wonders.'),
+    Item(
+        header: 'What makes you happiest?',
+        content: 'Things that make you happy.'),
+    Item(
+        header:
+            'What did you say as a kid when asked: What do you want to be when you grow up?',
+        content: 'Your childhood dream.'),
+    Item(
+        header: 'If you could visit one planet, which would it be?',
+        content: 'Details about your preferred planet.'),
+  ];
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
+      backgroundColor: Colors.blue,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        toolbarHeight: 15.h,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            color: AppColors.white,
+        backgroundColor: Colors.blue,
+        title: const Text(
+          'Feedback',
+          style: TextStyle(color: Colors.white),
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+            size: screenWidth * 0.07,
+          ),
+        ),
+        toolbarHeight: screenHeight * 0.1,
+      ),
+      body: Container(
+        height: screenHeight,
+        padding: EdgeInsets.only(top: screenHeight * 0.015),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(screenWidth * 0.1),
+                topRight: Radius.circular(screenWidth * 0.1))),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding:
+                EdgeInsets.symmetric(horizontal: width * 0.05, vertical: 16),
+            child: Column(
+              children: [
+                ..._items.map((item) => FAQItemWidget(item: item)).toList(),
+              ],
+            ),
           ),
         ),
       ),
-      body: Stack(
+    );
+  }
+}
+
+class FAQItemWidget extends StatefulWidget {
+  final Item item;
+
+  FAQItemWidget({required this.item});
+
+  @override
+  _FAQItemWidgetState createState() => _FAQItemWidgetState();
+}
+
+class _FAQItemWidgetState extends State<FAQItemWidget> {
+  bool _isExpanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+
+    return Card(
+      color: AppColors.lightPeach,
+      margin: EdgeInsets.symmetric(vertical: 8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Column(
         children: [
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: AppColors.blueGradient,
+          ListTile(
+            title: Text(
+              widget.item.header,
+              style: TextStyle(
+                  fontSize: width * 0.045, fontWeight: FontWeight.bold),
+            ),
+            trailing: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(width * 0.02),
+                  color: AppColors.orange2),
+              child: Icon(
+                _isExpanded ? Icons.expand_less : Icons.expand_more,
+                color: Colors.white,
               ),
             ),
+            onTap: () {
+              setState(() {
+                _isExpanded = !_isExpanded;
+              });
+            },
           ),
-          Positioned(
-            top: 25.h,
-            left: 20.w,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MorePage()),
-                );
-              },
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.arrow_back,
-                    size: 24,
-                    color: AppColors.white,
-                  ),
-                  SizedBox(width: 36.w),
-                  Text(
-                    'FAQ',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.white,
-                    ),
-                  ),
-                ],
+          if (_isExpanded)
+            Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                widget.item.content,
+                style: TextStyle(fontSize: width * 0.04),
               ),
             ),
-          ),
-          Positioned(
-            top: 100.h,
-            // left: 0,
-            // right: 0,
-            child: Container(
-              constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 1),
-              decoration: const BoxDecoration(
-                  color: Color.fromARGB(255, 249, 247, 247),
-                  borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(30),
-                      topLeft: Radius.circular(30))),
-              width: 393.w,
-              height: 761.h,
-              child: Padding(
-                padding: EdgeInsets.all(20.r),
-                child: const Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [],
-                ),
-              ),
-            ),
-          ),
         ],
       ),
     );
   }
+}
+
+class Item {
+  final String header;
+  final String content;
+
+  Item({
+    required this.header,
+    required this.content,
+  });
 }

@@ -2,6 +2,8 @@ import 'package:bima_gyaan/pages/more_pages/more_page.dart';
 import 'package:bima_gyaan/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 
 class ForumChatScreen extends StatelessWidget {
   const ForumChatScreen({super.key});
@@ -32,10 +34,11 @@ class ForumChatScreen extends StatelessWidget {
             left: 20.w,
             child: GestureDetector(
               onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MorePage()),
-                );
+                Get.back();
+                // Navigator.pushReplacement(
+                //   context,
+                //   MaterialPageRoute(builder: (context) =>  MorePage()),
+                // );
               },
               child: Row(
                 children: [

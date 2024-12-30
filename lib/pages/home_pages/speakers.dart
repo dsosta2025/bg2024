@@ -5,13 +5,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class Speakers extends StatelessWidget {
   final String sessionName;
   final String time;
-  final VoidCallback? onPressed;
+  final bool isBreak;
+
 
   const Speakers({
     super.key,
     required this.sessionName,
     required this.time,
-    this.onPressed,
+    required this.isBreak,
+
   });
 
   @override
@@ -63,22 +65,20 @@ class Speakers extends StatelessWidget {
                 ),
               ],
             ),
-            GestureDetector(
-              onTap: onPressed,
-              child: Container(
-                width: 32.w,
-                height: 47.h,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.w),
-                  gradient: AppColors.getOrangeGradient()
+            if(!isBreak)
+            Container(
+              width: 32.w,
+              height: 47.h,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.w),
+                gradient: AppColors.getOrangeGradient()
 
-                ),
-                child:  Center(
-                  child: Icon(
-                    Icons.keyboard_arrow_right,
-                    size: 30.w,
-                    color: Colors.white,
-                  ),
+              ),
+              child:  Center(
+                child: Icon(
+                  Icons.keyboard_arrow_right,
+                  size: 30.w,
+                  color: Colors.white,
                 ),
               ),
             ),

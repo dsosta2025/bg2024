@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bima_gyaan/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,12 +23,13 @@ class Sponsors extends StatelessWidget {
         borderRadius: BorderRadius.circular(20.r),
       ),
       child: Center(
-        child: Image.asset(
-          assetPath,
-          fit: BoxFit.cover,
-          height: 124.h,
-          width: 124.w,
-        ),
+        child: Image.memory(base64Decode(assetPath), fit: BoxFit.contain,)
+        // Image.asset(
+        //   assetPath,
+        //   fit: BoxFit.contain,
+        //   height: 124.h,
+        //   width: 200.w,
+        // ),
       ),
     );
   }
