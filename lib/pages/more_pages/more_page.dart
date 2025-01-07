@@ -5,7 +5,7 @@ import 'package:bima_gyaan/pages/more_pages/Presentations/presentations_screen.d
 import 'package:bima_gyaan/pages/more_pages/aboutBigGyaan/screen/aboutScreen.dart';
 import 'package:bima_gyaan/pages/more_pages/faq_screen.dart';
 import 'package:bima_gyaan/pages/more_pages/feedbackSection/screens/feedbackScreen.dart';
-import 'package:bima_gyaan/pages/more_pages/forum_chat_screen.dart';
+import 'package:bima_gyaan/pages/more_pages/morepageController.dart';
 import 'package:bima_gyaan/pages/more_pages/profileSection/screens/profile_screen.dart';
 import 'package:bima_gyaan/pages/more_pages/qnaSection/screens/qnaScreen.dart';
 import 'package:bima_gyaan/utils/colors.dart';
@@ -21,14 +21,13 @@ class MorePage extends StatefulWidget {
   State<MorePage> createState() => _MorePageState();
 }
 class _MorePageState extends State<MorePage> {
-  // Track expanded sections
   bool isGalleryExpanded = false;
   bool isPresentationsExpanded = false;
-
+MorePageController controller  = Get.put(MorePageController());
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
-
+controller.fetchGalleryDocIds();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.white,
@@ -120,43 +119,86 @@ class _MorePageState extends State<MorePage> {
                     ),
                   ),
                   buildDivider(),
-                  buildExpandableMenuItem(
-                    title: "Gallery",
-                    years: ["2024", "2023", "2022"],
-                    isExpanded: isGalleryExpanded,
-                    onExpansionChanged: (expanded) {
-                      setState(() {
-                        isGalleryExpanded = expanded;
-                      });
-                    },
-                    onYearTap: (year) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => GalleryScreen(year: year),
-                        ),
-                      );
-                    },
-                  ),
+                  Obx(() {
+                    return buildExpandableMenuItem(
+                      title: "Gallery",
+                      // Replace years with the dynamic list of doc IDs
+                      years: controller.galleryDocIds,
+                      isExpanded: isGalleryExpanded,
+                      onExpansionChanged: (expanded) {
+                        setState(() {
+                          isGalleryExpanded = expanded;
+                        });
+                      },
+                      onYearTap: (docId) {
+                        // Navigate with the docId instead of year
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => GalleryScreen(year: docId),
+                          ),
+                        );
+                      },
+                    );
+                  }),
+                  // buildExpandableMenuItem(
+                  //   title: "Gallery",
+                  //   years: ["2024", "2023", "2022"],
+                  //   isExpanded: isGalleryExpanded,
+                  //   onExpansionChanged: (expanded) {
+                  //     setState(() {
+                  //       isGalleryExpanded = expanded;
+                  //     });
+                  //   },
+                  //   onYearTap: (year) {
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //         builder: (context) => GalleryScreen(year: year),
+                  //       ),
+                  //     );
+                  //   },
+                  // ),
                   buildDivider(),
-                  buildExpandableMenuItem(
-                    title: "Presentations",
-                    years: ["2024", "2023", "2022"],
-                    isExpanded: isPresentationsExpanded,
-                    onExpansionChanged: (expanded) {
-                      setState(() {
-                        isPresentationsExpanded = expanded;
-                      });
-                    },
-                    onYearTap: (year) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => PresentationsScreen(year: year),
-                        ),
-                      );
-                    },
-                  ),
+                  Obx(() {
+                    return buildExpandableMenuItem(
+                      title: "Presentations",
+                      years: controller.presentationDocIds,   // Now doc IDs
+                      isExpanded: isPresentationsExpanded,
+                      onExpansionChanged: (expanded) {
+                        setState(() {
+                          isPresentationsExpanded = expanded;
+                        });
+                      },
+                      onYearTap: (docId) {
+                        // Navigate with doc ID
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PresentationsScreen(year: docId),
+                          ),
+                        );
+                      },
+                    );
+                  }),
+                  // buildExpandableMenuItem(
+                  //   title: "Presentations",
+                  //   years: ["2024", "2023", "2022"],
+                  //   isExpanded: isPresentationsExpanded,
+                  //   onExpansionChanged: (expanded) {
+                  //     setState(() {
+                  //       isPresentationsExpanded = expanded;
+                  //     });
+                  //   },
+                  //   onYearTap: (year) {
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //         builder: (context) => PresentationsScreen(year: year),
+                  //       ),
+                  //     );
+                  //   },
+                  // ),
                   buildDivider(),
                   buildMenuItem(
                     Icons.chat,

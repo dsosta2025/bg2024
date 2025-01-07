@@ -2,21 +2,14 @@ import 'package:bima_gyaan/pages/more_pages/qnaSection/controller/qnaController.
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
 class QAScreen extends StatelessWidget {
   final QuestionController _controller = Get.put(QuestionController());
   final TextEditingController _questionController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     _controller.fetchQuestions();
-
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       appBar: AppBar(
         title: Text('My Questions'),
@@ -28,7 +21,6 @@ class QAScreen extends StatelessWidget {
               if (_controller.questions.isEmpty) {
                 return Center(child: Text('No questions found.'));
               }
-
               return ListView.builder(
                 itemCount: _controller.questions.length,
                 itemBuilder: (context, index) {
