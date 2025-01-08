@@ -172,7 +172,6 @@ class _GalleryScreenState extends State<GalleryScreen>
                           tabs: const [
                             Tab(text: 'Photos'),
                             Tab(text: 'Videos'),
-
                           ],
                         ),
                       ),
@@ -216,9 +215,21 @@ class _GalleryScreenState extends State<GalleryScreen>
                                 final photoUrl = media.photos[index];
                                 print(photoUrl);
                                 print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                                return Image.memory(
-                                  base64Decode(photoUrl),
-                                  fit: BoxFit.contain,
+                                return InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            FullScreenImageViewer(
+                                                imageBase64: photoUrl),
+                                      ),
+                                    );
+                                  },
+                                  child: Image.memory(
+                                    base64Decode(photoUrl),
+                                    fit: BoxFit.contain,
+                                  ),
                                 );
 
                                 //   Image.network(
@@ -244,7 +255,6 @@ class _GalleryScreenState extends State<GalleryScreen>
                                 );
                               },
                             ),
-
                           ],
                         ),
                       ),
@@ -360,6 +370,41 @@ class _Base64VideoWidgetState extends State<Base64VideoWidget> {
           return const Center(child: CircularProgressIndicator());
         }
       },
+    );
+  }
+}
+
+class FullScreenImageViewer extends StatelessWidget {
+  final String imageBase64;
+
+  const FullScreenImageViewer({Key? key, required this.imageBase64})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.close, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body: Center(
+        child: InteractiveViewer(
+          panEnabled: true,
+          minScale: 1,
+          maxScale: 4,
+          child: Image.memory(
+            base64Decode(imageBase64),
+            fit: BoxFit.contain,
+          ),
+        ),
+      ),
     );
   }
 }

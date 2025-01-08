@@ -88,6 +88,7 @@ class AppoinmentCardWidget extends StatelessWidget {
                         fontWeight: FontWeight.w800,
                       ),
                     ),
+
                     rightSideWidget,
                   ],
                 ),

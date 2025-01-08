@@ -5,6 +5,7 @@ import 'package:bima_gyaan/pages/bottomBar_pages/participants_pages/scgedule_sec
 import 'package:bima_gyaan/utils/colors.dart';
 import 'package:bima_gyaan/widgets/rsuable_background_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class AppoinmentPage extends StatefulWidget {
@@ -30,6 +31,20 @@ class _AppoinmentPageState extends State<AppoinmentPage>
   Future<void> _refreshAppointments() async {
     await appointmentController.fetchUserAppointments();
     appointmentController.appointments.refresh();
+  }
+  String _getStatusIconPath(String status) {
+    print(status);
+     print("############################################");
+    switch (status.toLowerCase()) {
+      case 'pending':
+        return 'lib/assets/timer.svg';
+      case 'accepted':
+        return 'lib/assets/like-tag.svg';
+      case 'rejected':
+        return 'lib/assets/dislike.svg';
+      default:
+        return 'lib/assets/default-icon.svg'; // Fallback icon
+    }
   }
 
 
@@ -92,7 +107,10 @@ class _AppoinmentPageState extends State<AppoinmentPage>
                                 ? 'No Description'
                                 : appointment.description,
                             dateOrTime: appointment.date,
-                            rightSideWidget: const Icon(Icons.calendar_today),
+                            rightSideWidget: SvgPicture.asset(
+                              _getStatusIconPath(appointment.status), // Dynamically fetch the icon path
+                            ),
+                            // rightSideWidget: SvgPicture.asset('lib/assets/timer.svg'),
                             imageUrl: appointment.oppositeUserImage ?? '',
                             button1Text: showAcceptRejectButtons
                                 ? "Accept"
