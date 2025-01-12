@@ -47,7 +47,6 @@ class _AppoinmentPageState extends State<AppoinmentPage>
     }
   }
 
-
   Widget _buildAppointmentList(List<AppointmentModel> appointments,
       String emptyMessage, String currentUserId) {
     print(appointmentController.hasError.value);

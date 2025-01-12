@@ -106,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
           SizedBox(height: 20.h),
           _buildCreateAccountButton(),
           SizedBox(height: 20.h),
-          _buildSocialLoginOptions(),
+          // _buildSocialLoginOptions(),
           SizedBox(height: 20.h),
           _buildSponsorInfo(),
         ],
@@ -272,10 +272,11 @@ class _LoginScreenState extends State<LoginScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildSocialIcon('lib/assets/Facebook.png'),
-            _buildSocialIcon('lib/assets/Google.png'),
-            _buildSocialIcon('lib/assets/Instagram.png'),
-            _buildSocialIcon('lib/assets/LinkedIn.png'),
+            InkWell(
+                onTap: () {
+                  controller.signInWithGoogle();
+                },
+                child: _buildSocialIcon('lib/assets/Google.png')),
           ],
         ),
       ],

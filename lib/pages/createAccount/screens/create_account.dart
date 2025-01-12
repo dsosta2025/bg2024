@@ -1,3 +1,6 @@
+import 'dart:ffi';
+
+import 'package:bima_gyaan/pages/login_screen/screen/login_screen.dart';
 import 'package:bima_gyaan/utils/colors.dart';
 import 'package:bima_gyaan/utils/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +17,7 @@ class CreateAccountScreen extends StatefulWidget {
   _CreateAccountScreenState createState() => _CreateAccountScreenState();
 }
 
+SignUpController controller = Get.put(SignUpController());
 class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController fullNameController = TextEditingController();
@@ -174,12 +178,33 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     );
   }
 
+
   Widget _buildPhoneField() {
     return IntlPhoneField(
       controller: phoneController,
       decoration: _inputDecoration('Enter phone number'),
       initialCountryCode: 'IN',
-      onChanged: (phone) {},
+      onChanged: (phone) {
+
+
+        print(phoneController.text);
+        print(phone.completeNumber);
+
+        controller.completeNumber.value = phone.completeNumber;
+        print(controller.completeNumber);
+
+      },
+      onCountryChanged: (value) {
+        // controller.selectedCountryCode.value = value.fullCountryCode;
+
+        // Recompute the complete phone number
+        String currentNumber = phoneController.text; // Get the current phone number
+        String updatedCompleteNumber = '+${value.fullCountryCode}$currentNumber';
+        print("Updated Complete Number: $updatedCompleteNumber");
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        controller.completeNumber.value = updatedCompleteNumber;
+        print(controller.completeNumber.value);
+      },
       validator: (value) {
         if (value == null || value.completeNumber.isEmpty) {
           return 'Phone number is required';
@@ -265,11 +290,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     return CustomButton(
       text: 'Create Account',
       onPressed: () {
+        print(controller.completeNumber.value);
         if (_formKey.currentState!.validate()) {
           signUpController.signUp(
               fullName: fullNameController.text.trim(),
               email: emailController.text.trim(),
-              phone: phoneController.text.trim(),
+              phone: controller.completeNumber.value.trim(),
               password: passwordController.text.trim(),
               organization: organizationController.text.trim(),
               designation: designationController.text.trim(),

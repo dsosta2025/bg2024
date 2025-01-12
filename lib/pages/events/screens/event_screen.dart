@@ -14,6 +14,8 @@ class EventScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.sizeOf(context).width;
+    var height = MediaQuery.sizeOf(context).height;
     ScreenUtil.init(context,
         designSize: const Size(393, 683), minTextAdapt: true);
 
@@ -24,7 +26,7 @@ class EventScreen extends StatelessWidget {
       child: Column(
         children: [
           _buildLogo(),
-          _buildSponsoredBySection(),
+          _buildSponsoredBySection(width,height),
           _buildHotelInfoSection(context),
         ],
       ),
@@ -59,7 +61,6 @@ class EventScreen extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildEmptyState() {
     return Center(
       child: Padding(
@@ -95,7 +96,7 @@ class EventScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSponsoredBySection() {
+  Widget _buildSponsoredBySection(double width, double height ) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 18.h),
       child: Row(
@@ -105,7 +106,7 @@ class EventScreen extends StatelessWidget {
               'Sponsored by', 'lib/assets/Plus Logo.png', 69.82.w, 16.h),
           SizedBox(width: 50.w),
           _buildSponsoredBy(
-              'Powered by', 'lib/assets/Xsentinel.png', 66.w, 23.h),
+              'Powered by', 'lib/assets/Xsentinel.png',  width * 0.15,  height * 0.07),
         ],
       ),
     );
@@ -113,7 +114,8 @@ class EventScreen extends StatelessWidget {
 
   Widget _buildSponsoredBy(
       String title, String logoPath, double width, double height) {
-    return Column(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Text(
           title,

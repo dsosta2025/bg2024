@@ -6,7 +6,7 @@ import 'package:bima_gyaan/widgets/rsuable_background_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 class BookSlotScreen extends StatefulWidget {
   final String eventId;
 
@@ -41,11 +41,108 @@ class _BookSlotScreenState extends State<BookSlotScreen> {
   final _individualFormKey = GlobalKey<FormState>();
   final _organizationFormKey = GlobalKey<FormState>();
 
+  Razorpay razorpay = Razorpay();
+  void _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    // Log the success
+    print("Payment Success: ${response.paymentId}");
+    print("Order ID: ${response.orderId}");
+    print("Signature: ${response.signature}");
+
+    try {
+      if (bookSlotController.isOrganization.value) {
+        // Organization booking logic
+        await bookSlotController.addOrganizationSlot(
+          eventId: widget.eventId,
+          name: organizationNameController.text.trim(),
+          email: organizationEmailController.text.trim(),
+          companyName: organizationCompanyNameController.text.trim(),
+          pax: organizationPaxController.text.trim(),
+        );
+
+        // Clear organization fields
+        organizationNameController.clear();
+        organizationEmailController.clear();
+        organizationCompanyNameController.clear();
+        organizationPaxController.clear();
+      } else {
+        // Individual booking logic
+        await bookSlotController.addIndividualSlot(
+          eventId: widget.eventId,
+          name: individualNameController.text.trim(),
+          email: individualEmailController.text.trim(),
+          uploadId: individualUploadIdController.text.trim(),
+        );
+
+        // Clear individual fields
+        individualNameController.clear();
+        individualEmailController.clear();
+        individualUploadIdController.clear();
+      }
+
+      // Notify user of success
+      CustomSnackbarr.show(
+        context,
+        "Success",
+        "Payment successful and slot booked.",
+        isError: false,
+      );
+    } catch (e) {
+      // Handle slot booking error
+      CustomSnackbarr.show(
+        context,
+        "Error",
+        "Payment was successful, but slot booking failed: $e",
+        isError: true,
+      );
+    }
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    // Log the failure
+    print("Payment Failure: ${response.code}");
+    print("Message: ${response.message}");
+
+    // Notify user of failure
+    CustomSnackbarr.show(
+      context,
+      "Payment Error",
+      "Payment failed. Please try again.",
+      isError: true,
+    );
+  }
+
+  //
+  // void _handlePaymentSuccess(PaymentSuccessResponse response) async{
+  //   // Do something when payment succeeds
+  //
+  //   print("Successsssssssssssssssssssssssssssssssssss");
+  //
+  //   await bookSlotController.addIndividualSlot(
+  //     eventId: widget.eventId,
+  //     name: individualNameController.text.trim(),
+  //     email: individualEmailController.text.trim(),
+  //     uploadId: individualUploadIdController.text.trim(),
+  //   );
+  //
+  //   // Clear the fields after booking
+  //   individualNameController.clear();
+  //   individualEmailController.clear();
+  //   individualUploadIdController.clear();
+  //   // // Pop the screen after successful booking
+  // }
+  //
+  // void _handlePaymentError(PaymentFailureResponse response) {
+  //   // Do something when payment fails
+  // }
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     var spacer = SizedBox(height: height * 0.03);
+
+
+    razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
 
     final individual = Padding(
       padding: EdgeInsets.symmetric(
@@ -71,26 +168,30 @@ class _BookSlotScreenState extends State<BookSlotScreen> {
             MyTextFeild(
               hintText: 'Upload ID',
               controller: individualUploadIdController,
-              validator: '',
+              validator: 'optional',
             ),
             spacer,
             CustomButton(
-              text: 'Book Slot',
+              text: 'Submit',
               onPressed: () async {
                 if (_individualFormKey.currentState?.validate() ?? false) {
-                  await bookSlotController.addIndividualSlot(
-                    eventId: widget.eventId,
-                    name: individualNameController.text.trim(),
-                    email: individualEmailController.text.trim(),
-                    uploadId: individualUploadIdController.text.trim(),
-                  );
+                  // Calculate total amount with GST
+                  double baseAmount = 8000;
+                  double gst = baseAmount * 0.18;
+                  double totalAmount = baseAmount + gst;
+                  bookSlotController.isOrganization.value = false; // Individual booking
 
-                  // Clear the fields after booking
-                  individualNameController.clear();
-                  individualEmailController.clear();
-                  individualUploadIdController.clear();
-                  // Pop the screen after successful booking
-                  Navigator.of(context).pop();
+                  var options = {
+                    'key': 'rzp_test_g8KgIfsUPcMvUS',
+                    'amount': (totalAmount * 100).toInt(), // Convert to paise
+                    'name': individualNameController.text.trim(),
+                    'description': 'Individual Payment',
+                    'prefill': {
+                      'contact': individualUploadIdController.text.trim(),
+                      'email': individualEmailController.text.trim(),
+                    },
+                  };
+                  razorpay.open(options);
                 } else {
                   CustomSnackbarr.show(
                     context,
@@ -101,6 +202,36 @@ class _BookSlotScreenState extends State<BookSlotScreen> {
                 }
               },
             ),
+
+            // CustomButton(
+            //   text: 'Submit',
+            //   onPressed: () async {
+            //     if (_individualFormKey.currentState?.validate() ?? false) {
+            //
+            //
+            //       var options = {
+            //         'key': 'rzp_test_g8KgIfsUPcMvUS',
+            //         'amount': 8000,
+            //         'name': individualNameController.text.trim(),
+            //         'description': 'Indivusual ',
+            //         'prefill': {
+            //           'contact': individualUploadIdController.text.trim(),
+            //           'email': individualEmailController.text.trim()
+            //         }
+            //       };
+            //       razorpay.open(options);
+            //
+            //       // Navigator.of(context).pop();
+            //     } else {
+            //       CustomSnackbarr.show(
+            //         context,
+            //         "Error",
+            //         "Please fill all required fields correctly",
+            //         isError: true,
+            //       );
+            //     }
+            //   },
+            // ),
           ],
         ),
       ),
@@ -139,25 +270,42 @@ class _BookSlotScreenState extends State<BookSlotScreen> {
               validator: '',
             ),
             spacer,
+
             CustomButton(
-              text: 'Book Slot',
+              text: 'Submit',
               onPressed: () async {
                 if (_organizationFormKey.currentState?.validate() ?? false) {
-                  await bookSlotController.addOrganizationSlot(
-                    eventId: widget.eventId,
-                    name: organizationNameController.text.trim(),
-                    email: organizationEmailController.text.trim(),
-                    companyName: organizationCompanyNameController.text.trim(),
-                    pax: organizationPaxController.text.trim(),
-                  );
+                  int pax = int.tryParse(organizationPaxController.text.trim()) ?? 0;
 
-                  // Clear the fields after booking
-                  organizationNameController.clear();
-                  organizationEmailController.clear();
-                  organizationCompanyNameController.clear();
-                  organizationPaxController.clear();
-                  // Pop the screen after successful booking
-                  Navigator.of(context).pop();
+                  // Validate pax
+                  if (pax <= 0 || pax > 25) {
+                    CustomSnackbarr.show(
+                      context,
+                      "Error",
+                      "Number of people (pax) must be between 1 and 25.",
+                      isError: true,
+                    );
+                    return;
+                  }
+                  bookSlotController.isOrganization.value = true; // Individual booking
+
+
+                  // Calculate total amount with GST for pax
+                  double baseAmount = 8000;
+                  double gst = baseAmount * 0.18;
+                  double totalAmount = (baseAmount + gst) * pax;
+
+                  var options = {
+                    'key': 'rzp_test_g8KgIfsUPcMvUS',
+                    'amount': (totalAmount * 100).toInt(), // Convert to paise
+                    'name': organizationNameController.text.trim(),
+                    'description': 'Organization Payment for $pax people',
+                    'prefill': {
+                      'contact': organizationEmailController.text.trim(),
+                      'email': organizationEmailController.text.trim(),
+                    },
+                  };
+                  razorpay.open(options);
                 } else {
                   CustomSnackbarr.show(
                     context,
@@ -168,6 +316,36 @@ class _BookSlotScreenState extends State<BookSlotScreen> {
                 }
               },
             ),
+
+            // CustomButton(
+            //   text: 'Book Slot',
+            //   onPressed: () async {
+            //     if (_organizationFormKey.currentState?.validate() ?? false) {
+            //       await bookSlotController.addOrganizationSlot(
+            //         eventId: widget.eventId,
+            //         name: organizationNameController.text.trim(),
+            //         email: organizationEmailController.text.trim(),
+            //         companyName: organizationCompanyNameController.text.trim(),
+            //         pax: organizationPaxController.text.trim(),
+            //       );
+            //
+            //       // Clear the fields after booking
+            //       organizationNameController.clear();
+            //       organizationEmailController.clear();
+            //       organizationCompanyNameController.clear();
+            //       organizationPaxController.clear();
+            //       // Pop the screen after successful booking
+            //       Navigator.of(context).pop();
+            //     } else {
+            //       CustomSnackbarr.show(
+            //         context,
+            //         "Error",
+            //         "Please fill all required fields correctly",
+            //         isError: true,
+            //       );
+            //     }
+            //   },
+            // ),
           ],
         ),
       ),

@@ -9,7 +9,7 @@ import '../../events/screens/event_screen.dart';
 class SignUpController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+RxString completeNumber = ''.obs;
   var isLoading = false.obs;
 
   Future<void> signUp(

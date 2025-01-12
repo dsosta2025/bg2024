@@ -41,7 +41,7 @@ class _FAQScreenState extends State<FAQScreen> {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: const Text(
-          'Feedback',
+          'FAQ',
           style: TextStyle(color: Colors.white),
         ),
         leading: IconButton(

@@ -99,7 +99,10 @@ class _GalleryScreenState extends State<GalleryScreen>
             Container(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Color(0xFF2193b0), Color(0xFF6dd5ed)],
+                  colors: [
+                    Color(0xFF1B6FB5),
+                    Color(0xFF4AAAFA),
+                  ],
                 ),
               ),
             ),

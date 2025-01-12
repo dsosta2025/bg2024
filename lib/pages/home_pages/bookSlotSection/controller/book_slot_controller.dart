@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 class BookSlotController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  RxBool isOrganization = false.obs;
 
   var selectedDate = "Date".obs;
   Future<void> addIndividualSlot({

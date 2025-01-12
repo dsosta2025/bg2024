@@ -81,7 +81,7 @@ class _ReusableBackGroundScreenState extends State<ReusableBackGroundScreen>
           widget.isBookSlot
               ? SizedBox(height: height * 0.02)
               : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Column(
                       children: [
@@ -91,13 +91,17 @@ class _ReusableBackGroundScreenState extends State<ReusableBackGroundScreen>
                             width: width * 0.4, height: height * 0.02),
                       ],
                     ),
-                    SizedBox(width: width * 0.05),
-                    Column(
+                    // SizedBox(width: width * 0.05),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text("Powered by",
                             style: TextStyle(fontSize: width * 0.03)),
-                        Image.asset('lib/assets/Xsentinel.png',
-                            width: width * 0.4, height: height * 0.02),
+                        Container(
+                          // color: Colors.red,
+                          child: Image.asset('lib/assets/Xsentinel.png',
+                              width: width * 0.15, height: height * 0.07),
+                        ),
                       ],
                     ),
                   ],

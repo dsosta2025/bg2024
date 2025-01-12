@@ -42,58 +42,52 @@ class _EventsPageState extends State<EventsPage> {
         child: Column(
           children: [
             SizedBox(height: 10.h),
-            Padding(
-              padding: EdgeInsets.only(left: 16.w, right: 16.w, bottom: 18.h),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Column(
-                    children: [
-                      Text(
-                        'Sponsored by',
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w400,
-                          height: 1.4,
-                          letterSpacing: 0.001,
-                          textBaseline: TextBaseline.alphabetic,
-                        ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      'Sponsored by',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w400,
+                        height: 1.4,
+                        letterSpacing: 0.001,
+                        textBaseline: TextBaseline.alphabetic,
                       ),
-                      SizedBox(height: 10.h),
-                      Image.asset(
-                        'lib/assets/Plus Logo.png',
-                        width: 69.82.w,
-                        height: 16.h,
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 50.w),
-                    child: Column(
-                      children: [
-                        Text(
-                          'Powered by',
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w400,
-                            height: 1.4,
-                            letterSpacing: 0.001,
-                            textBaseline: TextBaseline.alphabetic,
-                          ),
-                        ),
-                        SizedBox(height: 10.h),
-                        Image.asset(
-                          'lib/assets/Xsentinel.png',
-                          width: 66.w,
-                          height: 23.h,
-                        ),
-                      ],
                     ),
-                  ),
-                ],
-              ),
+                    SizedBox(height: 10.h),
+                    Image.asset(
+                      'lib/assets/Plus Logo.png',
+                      width: 69.82.w,
+                      height: 16.h,
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Powered by',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w400,
+                        height: 1.4,
+                        letterSpacing: 0.001,
+                        textBaseline: TextBaseline.alphabetic,
+                      ),
+                    ),
+                    Image.asset(
+                      'lib/assets/Xsentinel.png',
+                      width: 70.w,
+                      height: 50.h,
+                    ),
+                  ],
+                ),
+              ],
             ),
             SizedBox(height: 16.h),
             Obx(() {
@@ -119,7 +113,7 @@ class _EventsPageState extends State<EventsPage> {
                     controller.selectedEventName.value.isEmpty
                         ? 'No Event on this day'
                         : controller.selectedEventName.value,
-                    style:  TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Poppins',
                       color: AppColors.white,
                       fontSize: 16.sp,
@@ -165,22 +159,65 @@ class _EventsPageState extends State<EventsPage> {
                     },
                     calendarStyle: const CalendarStyle(
                       selectedDecoration: BoxDecoration(
-                        color: AppColors.orange2, // Change this to your desired color
-                        shape: BoxShape.circle, // Shape of the selected date
+                        color: AppColors.orange2,
+                        shape: BoxShape.circle,
                       ),
                       todayDecoration: BoxDecoration(
-                        color: Colors.blue, // Color for the current day
+                        color: Colors.blue,
                         shape: BoxShape.circle,
                       ),
                       selectedTextStyle: TextStyle(
-                        color: Colors.white, // Text color for the selected date
+                        color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
                       todayTextStyle: TextStyle(
-                        color: Colors.white, // Text color for today's date
+                        color: Colors.white,
                       ),
                     ),
+                    headerStyle: HeaderStyle(
+                      formatButtonVisible: false, // Hides the "2 weeks" toggle button
+                    ),
+                    availableCalendarFormats: const {
+                      CalendarFormat.month: 'Month', // Only allow the month view
+                    },
                   )
+
+                  // TableCalendar(
+                  //   firstDay: DateTime.utc(2010, 1, 1),
+                  //   lastDay: DateTime.utc(2030, 1, 1),
+                  //   focusedDay: _focusedDay,
+                  //   selectedDayPredicate: (day) {
+                  //     return isSameDay(_selectedDay, day);
+                  //   },
+                  //   onDaySelected: (selectedDay, focusedDay) {
+                  //     setState(() {
+                  //       _selectedDay = selectedDay;
+                  //       _focusedDay = focusedDay;
+                  //     });
+                  //     final formattedDate =
+                  //         DateFormat('dd/MM/yyyy').format(selectedDay);
+                  //     print(formattedDate);
+                  //     controller.findEventByDate(formattedDate);
+                  //   },
+                  //   calendarStyle: const CalendarStyle(
+                  //     selectedDecoration: BoxDecoration(
+                  //       color: AppColors.orange2,
+                  //       // Change this to your desired color
+                  //       shape: BoxShape.circle, // Shape of the selected date
+                  //     ),
+                  //     todayDecoration: BoxDecoration(
+                  //       color: Colors.blue, // Color for the current day
+                  //       shape: BoxShape.circle,
+                  //     ),
+                  //     selectedTextStyle: TextStyle(
+                  //       color: Colors.white, // Text color for the selected date
+                  //       fontWeight: FontWeight.bold,
+                  //     ),
+                  //     todayTextStyle: TextStyle(
+                  //       color: Colors.white, // Text color for today's date
+                  //     ),
+                  //   ),
+                  // )
 
                   // TableCalendar(
                   //   firstDay: DateTime.utc(2010, 1, 1),

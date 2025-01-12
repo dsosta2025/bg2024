@@ -12,7 +12,12 @@
           "package_name": "com.example.bima_gyaan"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "594022855564-s82n2hio2mb9ff9862lv4beav5rn2obv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyARx0EbslTfhVhkW4Am-_DzUvJNGYaxStg"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "594022855564-s82n2hio2mb9ff9862lv4beav5rn2obv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "594022855564-a7vmumiflmf7bpsgroo22n97iikflnk0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.bimaGyaan"
+              }
+            }
+          ]
         }
       }
     }

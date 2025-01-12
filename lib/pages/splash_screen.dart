@@ -32,6 +32,7 @@ import 'package:bima_gyaan/pages/events/screens/event_screen.dart';
 import 'package:bima_gyaan/pages/login_screen/screen/login_screen.dart';
 import 'package:bima_gyaan/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // If using Firebase for authentication
 
@@ -131,24 +132,24 @@ class _SplashScreenState extends State<SplashScreen> {
                     ),
                   ],
                 ),
-                Column(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       'Powered by',
                       style: TextStyle(
                         fontFamily: 'Poppins',
-                        fontSize: 14,
+                        fontSize: 12.sp,
                         fontWeight: FontWeight.w400,
                         height: 1.4,
                         letterSpacing: 0.001,
                         textBaseline: TextBaseline.alphabetic,
                       ),
                     ),
-                    const SizedBox(height: 10),
                     Image.asset(
                       'lib/assets/Xsentinel.png',
-                      width: 93.37,
-                      height: 32.54,
+                      width: 70.w,
+                      height: 50.h,
                     ),
                   ],
                 ),

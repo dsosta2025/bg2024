@@ -14,20 +14,26 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
 class MorePage extends StatefulWidget {
   String evenId;
+
   MorePage({super.key, required this.evenId});
+
   @override
   State<MorePage> createState() => _MorePageState();
 }
+
 class _MorePageState extends State<MorePage> {
   bool isGalleryExpanded = false;
   bool isPresentationsExpanded = false;
-MorePageController controller  = Get.put(MorePageController());
+  MorePageController controller = Get.put(MorePageController());
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
-controller.fetchGalleryDocIds();
+    controller.fetchGalleryDocIds();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.white,
@@ -42,9 +48,9 @@ controller.fetchGalleryDocIds();
           children: [
             SizedBox(height: 1.h),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 18.h),
+              padding: EdgeInsets.symmetric(vertical: 18.h),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Column(
                     children: [
@@ -67,29 +73,26 @@ controller.fetchGalleryDocIds();
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 50.w),
-                    child: Column(
-                      children: [
-                        const Text(
-                          'Powered by',
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            height: 1.4,
-                            letterSpacing: 0.001,
-                            textBaseline: TextBaseline.alphabetic,
-                          ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Powered by',
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w400,
+                          height: 1.4,
+                          letterSpacing: 0.001,
+                          textBaseline: TextBaseline.alphabetic,
                         ),
-                        SizedBox(height: 10.h),
-                        Image.asset(
-                          'lib/assets/Xsentinel.png',
-                          width: 66.w,
-                          height: 23.h,
-                        ),
-                      ],
-                    ),
+                      ),
+                      Image.asset(
+                        'lib/assets/Xsentinel.png',
+                        width: 70.w,
+                        height: 50.h,
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -163,7 +166,8 @@ controller.fetchGalleryDocIds();
                   Obx(() {
                     return buildExpandableMenuItem(
                       title: "Presentations",
-                      years: controller.presentationDocIds,   // Now doc IDs
+                      years: controller.presentationDocIds,
+                      // Now doc IDs
                       isExpanded: isPresentationsExpanded,
                       onExpansionChanged: (expanded) {
                         setState(() {
@@ -175,7 +179,8 @@ controller.fetchGalleryDocIds();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => PresentationsScreen(year: docId),
+                            builder: (context) =>
+                                PresentationsScreen(year: docId),
                           ),
                         );
                       },
@@ -206,7 +211,7 @@ controller.fetchGalleryDocIds();
                     onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (builder) =>  QAScreen(),
+                        builder: (builder) => QAScreen(),
                       ),
                     ),
                   ),
@@ -217,7 +222,7 @@ controller.fetchGalleryDocIds();
                     onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (builder) =>  AnnouncementsScreen(),
+                        builder: (builder) => AnnouncementsScreen(),
                       ),
                     ),
                   ),
@@ -228,7 +233,7 @@ controller.fetchGalleryDocIds();
                     onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (builder) =>  FAQScreen(),
+                        builder: (builder) => FAQScreen(),
                       ),
                     ),
                   ),
@@ -268,11 +273,18 @@ controller.fetchGalleryDocIds();
       ),
     );
   }
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
   Future<void> logout() async {
     try {
-      // Perform logout
+      // Sign out from Firebase
       await _auth.signOut();
+
+      // Sign out from Google
+      final GoogleSignIn _googleSignIn = GoogleSignIn();
+      if (await _googleSignIn.isSignedIn()) {
+        await _googleSignIn.signOut();
+      }
 
       // Navigate to Login Screen
       Get.offAll(() => const LoginScreen());
@@ -289,6 +301,28 @@ controller.fetchGalleryDocIds();
       );
     }
   }
+
+  // Future<void> logout() async {
+  //   try {
+  //     // Perform logout
+  //     await _auth.signOut();
+  //
+  //     // Navigate to Login Screen
+  //     Get.offAll(() => const LoginScreen());
+  //
+  //     // Show custom success snackbar
+  //     CustomSnackbarr.show(Get.context!, 'Success', 'Logged out successfully!');
+  //   } catch (e) {
+  //     // Show custom error snackbar
+  //     CustomSnackbarr.show(
+  //       Get.context!,
+  //       'Error',
+  //       'Failed to log out: ${e.toString()}',
+  //       isError: true,
+  //     );
+  //   }
+  // }
+
   Widget buildExpandableMenuItem({
     required String title,
     required List<String> years,
@@ -296,58 +330,128 @@ controller.fetchGalleryDocIds();
     required ValueChanged<bool> onExpansionChanged,
     required ValueChanged<String> onYearTap,
   }) {
-    return ExpansionTile(
-      title: Row(
-        children: [
-          Icon(
-            title == "Gallery" ? Icons.photo : Icons.description,
-            color: AppColors.white,
-            size: 24,
-          ),
-          SizedBox(width: 20.w),
-          Text(
-            title,
-            style: const TextStyle(
-              fontFamily: 'Poppins',
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-      trailing: Icon(
-        isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-        size: 24,
-        color: AppColors.white,
-      ),
-      onExpansionChanged: onExpansionChanged,
-      children: years.map((year) {
-        return ListTile(
-          contentPadding: EdgeInsets.only(left: 64.w, right: 20.w),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      child: Theme(
+        data: Theme.of(Get.context!).copyWith(
+          dividerColor: Colors.transparent, // Removes the black line
+        ),
+        child: ExpansionTile(
+          tilePadding: EdgeInsets.zero,
+          // Adjust padding if necessary
           title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Icon(
+                title == "Gallery" ? Icons.photo : Icons.description,
+                color: AppColors.white,
+                size: 24,
+              ),
+              SizedBox(width: 20.w),
               Text(
-                year,
+                title,
                 style: const TextStyle(
                   fontFamily: 'Poppins',
-                  color: Colors.white70,
-                  fontSize: 14,
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
                 ),
-              ),
-              const Icon(
-                Icons.arrow_forward,
-                color: Colors.white70,
-                size: 24,
               ),
             ],
           ),
-          onTap: () => onYearTap(year),
-        );
-      }).toList(),
+          trailing: Icon(
+            isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+            size: 24,
+            color: AppColors.white,
+          ),
+          onExpansionChanged: onExpansionChanged,
+          children: years.map((year) {
+            return ListTile(
+              contentPadding: EdgeInsets.only(left: 64.w, right: 20.w),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    year,
+                    style: const TextStyle(
+                      fontFamily: 'Poppins',
+                      color: Colors.white70,
+                      fontSize: 14,
+                    ),
+                  ),
+                  const Icon(
+                    Icons.arrow_forward,
+                    color: Colors.white70,
+                    size: 24,
+                  ),
+                ],
+              ),
+              onTap: () => onYearTap(year),
+            );
+          }).toList(),
+        ),
+      ),
     );
   }
+
+  // Widget buildExpandableMenuItem({
+  //   required String title,
+  //   required List<String> years,
+  //   required bool isExpanded,
+  //   required ValueChanged<bool> onExpansionChanged,
+  //   required ValueChanged<String> onYearTap,
+  // }) {
+  //   return ExpansionTile(
+  //     title: Row(
+  //       children: [
+  //         Icon(
+  //           title == "Gallery" ? Icons.photo : Icons.description,
+  //           color: AppColors.white,
+  //           size: 24,
+  //         ),
+  //         SizedBox(width: 20.w),
+  //         Text(
+  //           title,
+  //           style: const TextStyle(
+  //             fontFamily: 'Poppins',
+  //             color: Colors.white,
+  //             fontSize: 16,
+  //             fontWeight: FontWeight.w500,
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //     trailing: Icon(
+  //       isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+  //       size: 24,
+  //       color: AppColors.white,
+  //     ),
+  //     onExpansionChanged: onExpansionChanged,
+  //     children: years.map((year) {
+  //       return ListTile(
+  //         contentPadding: EdgeInsets.only(left: 64.w, right: 20.w),
+  //         title: Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             Text(
+  //               year,
+  //               style: const TextStyle(
+  //                 fontFamily: 'Poppins',
+  //                 color: Colors.white70,
+  //                 fontSize: 14,
+  //               ),
+  //             ),
+  //             const Icon(
+  //               Icons.arrow_forward,
+  //               color: Colors.white70,
+  //               size: 24,
+  //             ),
+  //           ],
+  //         ),
+  //         onTap: () => onYearTap(year),
+  //       );
+  //     }).toList(),
+  //   );
+  // }
 
   Widget buildMenuItem(IconData icon, String title,
       {bool showArrow = false, required VoidCallback onPressed}) {
