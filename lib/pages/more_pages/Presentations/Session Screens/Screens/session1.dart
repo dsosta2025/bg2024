@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:bima_gyaan/pages/more_pages/Presentations/Session%20Screens/Screens/session2.dart';
 import 'package:bima_gyaan/utils/colors.dart';
 import 'package:bima_gyaan/widgets/customeButton.dart';
 import 'package:flutter/material.dart';
