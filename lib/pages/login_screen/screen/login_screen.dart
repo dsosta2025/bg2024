@@ -17,9 +17,7 @@ class LoginScreen extends StatefulWidget {
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
-
 LoginController controller = Get.put(LoginController());
-
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -113,7 +111,6 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
   Widget _buildLoginTitle() {
     return Text(
       'Login',

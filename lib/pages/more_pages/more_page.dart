@@ -1,3 +1,4 @@
+import 'package:bima_gyaan/pages/events/model/event_model.dart';
 import 'package:bima_gyaan/pages/login_screen/screen/login_screen.dart';
 import 'package:bima_gyaan/pages/more_pages/Announcements/announcements_screen.dart';
 import 'package:bima_gyaan/pages/more_pages/Gallery/gallery_screen.dart';
@@ -29,11 +30,11 @@ class _MorePageState extends State<MorePage> {
   bool isGalleryExpanded = false;
   bool isPresentationsExpanded = false;
   MorePageController controller = Get.put(MorePageController());
-
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
     controller.fetchGalleryDocIds();
+    controller.fetchAllEvents();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.white,
@@ -125,7 +126,6 @@ class _MorePageState extends State<MorePage> {
                   Obx(() {
                     return buildExpandableMenuItem(
                       title: "Gallery",
-                      // Replace years with the dynamic list of doc IDs
                       years: controller.galleryDocIds,
                       isExpanded: isGalleryExpanded,
                       onExpansionChanged: (expanded) {
@@ -139,6 +139,31 @@ class _MorePageState extends State<MorePage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => GalleryScreen(year: docId),
+                          ),
+                        );
+                      },
+                    );
+                  }),
+
+                  buildDivider(),
+                  Obx(() {
+                    return buildExpandableMenuItemP(
+                      title: "Presentations",
+                      events: controller.eventsList.value,
+                      // Now doc IDs
+                      isExpanded: isPresentationsExpanded,
+                      onExpansionChanged: (expanded) {
+                        setState(() {
+                          isPresentationsExpanded = expanded;
+                        });
+                      },
+                      onEventTap: (docId) {
+                        // Navigate with doc ID
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                PresentationsScreen(id: docId.id),
                           ),
                         );
                       },
@@ -162,30 +187,6 @@ class _MorePageState extends State<MorePage> {
                   //     );
                   //   },
                   // ),
-                  buildDivider(),
-                  Obx(() {
-                    return buildExpandableMenuItem(
-                      title: "Presentations",
-                      years: controller.presentationDocIds,
-                      // Now doc IDs
-                      isExpanded: isPresentationsExpanded,
-                      onExpansionChanged: (expanded) {
-                        setState(() {
-                          isPresentationsExpanded = expanded;
-                        });
-                      },
-                      onYearTap: (docId) {
-                        // Navigate with doc ID
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                PresentationsScreen(year: docId),
-                          ),
-                        );
-                      },
-                    );
-                  }),
                   // buildExpandableMenuItem(
                   //   title: "Presentations",
                   //   years: ["2024", "2023", "2022"],
@@ -392,6 +393,75 @@ class _MorePageState extends State<MorePage> {
       ),
     );
   }
+  Widget buildExpandableMenuItemP({
+    required String title,
+    required List<Event> events, // Accept a list of Event objects
+    required bool isExpanded,
+    required ValueChanged<bool> onExpansionChanged,
+    required ValueChanged<Event> onEventTap, // Pass the tapped Event object
+  }) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      child: Theme(
+        data: Theme.of(Get.context!).copyWith(
+          dividerColor: Colors.transparent, // Removes the black line
+        ),
+        child: ExpansionTile(
+          tilePadding: EdgeInsets.zero, // Adjust padding if necessary
+          title: Row(
+            children: [
+              Icon(
+                title == "Gallery" ? Icons.photo : Icons.description,
+                color: AppColors.white,
+                size: 24,
+              ),
+              SizedBox(width: 20.w),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontFamily: 'Poppins',
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          trailing: Icon(
+            isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+            size: 24,
+            color: AppColors.white,
+          ),
+          onExpansionChanged: onExpansionChanged,
+          children: events.map((event) {
+            return ListTile(
+              contentPadding: EdgeInsets.only(left: 64.w, right: 20.w),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    event.year, // Display event year as subtitle
+                    style: const TextStyle(
+                      fontFamily: 'Poppins',
+                      color: Colors.white,
+                      fontSize: 12,
+                    ),
+                  ),
+                  const Icon(
+                    Icons.arrow_forward,
+                    color: Colors.white70,
+                    size: 24,
+                  ),
+                ],
+              ),
+              onTap: () => onEventTap(event), // Pass the event object when tapped
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
 
   // Widget buildExpandableMenuItem({
   //   required String title,

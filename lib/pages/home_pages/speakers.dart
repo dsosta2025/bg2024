@@ -20,9 +20,7 @@ class Speakers extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 345.w,
-      height: 80.h,
       decoration: BoxDecoration(
-
         color: AppColors.lightPeach,
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
@@ -35,7 +33,6 @@ class Speakers extends StatelessWidget {
         ],
       ),
       child: Padding(
-        // padding: EdgeInsets.only(top: 10.h, left: 10.w),
         padding: EdgeInsets.symmetric(vertical: 15.h,horizontal: 20.w),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

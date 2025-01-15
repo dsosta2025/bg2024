@@ -26,7 +26,7 @@ class EventScreen extends StatelessWidget {
       child: Column(
         children: [
           _buildLogo(),
-          _buildSponsoredBySection(width,height),
+          _buildSponsoredBySection(width, height),
           _buildHotelInfoSection(context),
         ],
       ),
@@ -61,6 +61,7 @@ class EventScreen extends StatelessWidget {
       ),
     );
   }
+
   Widget _buildEmptyState() {
     return Center(
       child: Padding(
@@ -96,17 +97,18 @@ class EventScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSponsoredBySection(double width, double height ) {
+  Widget _buildSponsoredBySection(double width, double height) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 18.h),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSponsoredBy(
               'Sponsored by', 'lib/assets/Plus Logo.png', 69.82.w, 16.h),
           SizedBox(width: 50.w),
-          _buildSponsoredBy(
-              'Powered by', 'lib/assets/Xsentinel.png',  width * 0.15,  height * 0.07),
+          _buildPowereByBy('Powered by', 'lib/assets/Xsentinel.png',
+              width * 0.15, height * 0.07),
         ],
       ),
     );
@@ -114,8 +116,35 @@ class EventScreen extends StatelessWidget {
 
   Widget _buildSponsoredBy(
       String title, String logoPath, double width, double height) {
-    return Row(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontSize: 12.sp,
+            fontWeight: FontWeight.w400,
+            height: 1.4,
+            letterSpacing: 0.001,
+          ),
+        ),
+        SizedBox(height: 10.h),
+        Image.asset(
+          logoPath,
+          width: width,
+          height: height,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPowereByBy(
+      String title, String logoPath, double width, double height) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
           title,
@@ -214,7 +243,6 @@ class EventScreen extends StatelessWidget {
                 controller.eventsList[index].pickupDate,
                 controller.eventsList[index].id,
                 controller.eventsList[index].year,
-
               );
             },
           ),
@@ -252,8 +280,14 @@ class EventScreen extends StatelessWidget {
   //   );
   // }
 
-  Widget _buildHotelInfoCard(BuildContext context, String backgroundImage,
-      String hotelName, String hotelLocation, String dateText, String eventId, String eventYear) {
+  Widget _buildHotelInfoCard(
+      BuildContext context,
+      String backgroundImage,
+      String hotelName,
+      String hotelLocation,
+      String dateText,
+      String eventId,
+      String eventYear) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 7.w),
       child: HotelInfoCard(
@@ -268,7 +302,7 @@ class EventScreen extends StatelessWidget {
             MaterialPageRoute(
                 builder: (builder) => BottomNavigation(
                       eventId: eventId,
-                     eventYear: eventYear,
+                      eventYear: eventYear,
                     )),
           );
           print('Know more pressed for $hotelName');
