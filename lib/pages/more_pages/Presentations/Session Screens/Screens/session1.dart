@@ -10,6 +10,8 @@ class SessionSpeakerCardP extends StatelessWidget {
   final String yourBase64String; // Optional additional text
   final String address; // Optional additional text
   final String imageUrl; // Optional additional text
+  final VoidCallback onViewTap;
+  final VoidCallback onDownloadTap;
 
   const SessionSpeakerCardP({
     super.key,
@@ -17,6 +19,8 @@ class SessionSpeakerCardP extends StatelessWidget {
     required this.yourBase64String,
     required this.address,
     required this.imageUrl,
+    required this.onViewTap,
+    required this.onDownloadTap,
   });
 
   @override
@@ -90,15 +94,7 @@ class SessionSpeakerCardP extends StatelessWidget {
                 children: [
                   CustomeButton(
                     text: 'View PPT',
-                    onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => PDFViewerScreen(base64PDF: yourBase64String),
-                      //   ),
-                      // );
-
-                    },
+                    onPressed: onViewTap,
                     // Use the passed function
                     horizontalPadding: width * 0.04,
                     verticalPadding: height * 0.012,
@@ -108,7 +104,7 @@ class SessionSpeakerCardP extends StatelessWidget {
                   SizedBox(width: width * 0.025),
                   CustomeButton(
                     text: 'Download PPT',
-                    onPressed: () {},
+                    onPressed: onDownloadTap,
                     // Use the passed function
                     horizontalPadding: width * 0.04,
                     verticalPadding: height * 0.012,

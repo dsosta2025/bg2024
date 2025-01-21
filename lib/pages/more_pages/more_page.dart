@@ -162,8 +162,7 @@ class _MorePageState extends State<MorePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                PresentationsScreen(id: docId.id),
+                            builder: (context) => PresentationsScreen(id: docId.id,year: docId.year,),
                           ),
                         );
                       },

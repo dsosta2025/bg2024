@@ -14,15 +14,19 @@ import '../../home_pages/session_speaker_card.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key, required this.eventId, required this.eventYear});
+
   String eventId;
   String eventYear;
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
+
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   HomeController controller = Get.put(HomeController());
+
   @override
   void initState() {
     _tabController = TabController(length: 3, vsync: this);
@@ -30,14 +34,17 @@ class _HomePageState extends State<HomePage>
     controller.fetchSchedules(widget.eventId);
     super.initState();
   }
+
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
   }
+
   bool containsBreak(String input) {
     return input.toLowerCase().contains('break');
   }
+
   late var speakersTab;
   bool istap = true;
   final List<Map<String, String>> scheduleData = [
@@ -171,13 +178,8 @@ class _HomePageState extends State<HomePage>
       }
     });
 
-
-
     if (istap) {
-      speakersTab
-
-
-      = Obx(() {
+      speakersTab = Obx(() {
         if (controller.isLoadingSpeakers.value) {
           return const Center(
               child: CircularProgressIndicator(
@@ -228,8 +230,7 @@ class _HomePageState extends State<HomePage>
                             controller.speakers.value[indexx].sessionId);
                         istap = false;
                         setState(() {
-                          speakersTab =
-                              Obx(() {
+                          speakersTab = Obx(() {
                             if (controller.isLoadingSessions.value) {
                               return Column(
                                 children: [
@@ -422,15 +423,28 @@ class _HomePageState extends State<HomePage>
                                       SizedBox(
                                         height: height * 0.03,
                                       ),
-                                      SessionSpeakerCard(
-                                        imageUrl: controller
-                                            .sessions.value[index].imageUrl,
-                                        name: controller
-                                            .sessions.value[index].name,
-                                        toTime: controller
-                                            .sessions.value[index].time,
-                                        address: controller
-                                            .sessions.value[index].topic,
+                                      InkWell(
+                                        onTap: () {
+                                          _showDialog(
+                                              context,
+                                              controller
+                                                  .sessions.value[index].name,
+                                              controller
+                                                  .sessions.value[index].topic,
+                                              controller.sessions.value[index]
+                                                  .description,
+                                              width);
+                                        },
+                                        child: SessionSpeakerCard(
+                                          imageUrl: controller
+                                              .sessions.value[index].imageUrl,
+                                          name: controller
+                                              .sessions.value[index].name,
+                                          toTime: controller
+                                              .sessions.value[index].time,
+                                          address: controller
+                                              .sessions.value[index].topic,
+                                        ),
                                       ),
                                     ],
                                   );
@@ -458,9 +472,6 @@ class _HomePageState extends State<HomePage>
         }
       });
     }
-
-
-
 
     final sponsorsTab = Obx(() {
       if (controller.isSponsorLoading.value) {
@@ -581,6 +592,55 @@ class _HomePageState extends State<HomePage>
                   }),
             ]
           : [],
+    );
+  }
+
+  void _showDialog(BuildContext context, String name, String designation,
+      String description, double width) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: AppColors.lightPeach,
+          title: Text('Name: $name'),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text('$designation'),
+                SizedBox(height: 10),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Description:  ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold, // Bold the heading
+                          color: Colors.black, // Optional: Ensure it's visible
+                        ),
+                      ),
+                      TextSpan(
+                        text: description,
+                        style: TextStyle(
+                          color: Colors.black, // Optional: Color for the description
+                        ),
+                      ),
+                    ],
+                  ),
+                ),              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK', style: TextStyle(color: AppColors.orange2)),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

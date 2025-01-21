@@ -13,11 +13,11 @@ class ParticipantsPage extends StatefulWidget {
   State<ParticipantsPage> createState() => _ParticipantsPageState();
 }
 
+
 class _ParticipantsPageState extends State<ParticipantsPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   ParticipantsController controller = Get.put(ParticipantsController());
-
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
