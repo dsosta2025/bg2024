@@ -229,10 +229,11 @@ class _GalleryScreenState extends State<GalleryScreen>
                                       ),
                                     );
                                   },
-                                  child: Image.memory(
-                                    base64Decode(photoUrl),
-                                    fit: BoxFit.contain,
-                                  ),
+                                  child: Image.network(photoUrl),
+                                  // Image.memory(
+                                  //   base64Decode(photoUrl),
+                                  //   fit: BoxFit.contain,
+                                  // ),
                                 );
 
                                 //   Image.network(
