@@ -403,10 +403,11 @@ class FullScreenImageViewer extends StatelessWidget {
           panEnabled: true,
           minScale: 1,
           maxScale: 4,
-          child: Image.memory(
-            base64Decode(imageBase64),
-            fit: BoxFit.contain,
-          ),
+          child: Image.network(imageBase64, fit: BoxFit.contain),
+          // child: Image.memory(
+          //   base64Decode(imageBase64),
+          //   fit: BoxFit.contain,
+          // ),
         ),
       ),
     );

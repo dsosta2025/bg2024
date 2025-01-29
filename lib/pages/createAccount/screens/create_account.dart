@@ -400,7 +400,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         ),
         SizedBox(width: 5.w),
         Image.asset(
-          'lib/assets/Xsentinel.png',
+          'lib/assets/logo_bigGyan.png',
           width: 66.w,
           height: 23.h,
         ),

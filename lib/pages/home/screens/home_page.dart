@@ -430,11 +430,12 @@ class _HomePageState extends State<HomePage>
                                               controller
                                                   .sessions.value[index].name,
                                               controller
-                                                  .sessions.value[index].topic,
+                                                  .sessions.value[index].companyDetails,
                                               controller.sessions.value[index]
                                                   .description,
                                               width);
                                         },
+
                                         child: SessionSpeakerCard(
                                           imageUrl: controller
                                               .sessions.value[index].imageUrl,
@@ -602,33 +603,38 @@ class _HomePageState extends State<HomePage>
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: AppColors.lightPeach,
-          title: Text('Name: $name'),
+          title: Text('$name'),
           content: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Text('$designation'),
-                SizedBox(height: 10),
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'Description:  ',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold, // Bold the heading
-                          color: Colors.black, // Optional: Ensure it's visible
-                        ),
-                      ),
-                      TextSpan(
-                        text: description,
-                        style: TextStyle(
-                          color: Colors.black, // Optional: Color for the description
-                        ),
-                      ),
-                    ],
-                  ),
-                ),              ],
+                SizedBox(height: 7.h),
+                Text("About : ",style: TextStyle(fontWeight: FontWeight.bold),),
+                SizedBox(height: 7.h),
+                Text('$description'),
+                // RichText(
+                //   text: TextSpan(
+                //     children: [
+                //       TextSpan(
+                //         text: 'Description:  ',
+                //         style: TextStyle(
+                //           fontWeight: FontWeight.bold, // Bold the heading
+                //           color: Colors.black, // Optional: Ensure it's visible
+                //         ),
+                //       ),
+                //       TextSpan(
+                //         text: description,
+                //         style: TextStyle(
+                //           color: Colors.black, // Optional: Color for the description
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+
+              ],
             ),
           ),
           actions: <Widget>[
@@ -844,7 +850,7 @@ class _HomePageState extends State<HomePage>
 //                   ),
 //                   SizedBox(height: height*0.01),
 //                   Image.asset(
-//                     'lib/assets/Xsentinel.png',
+//                     'lib/assets/logo_bigGyan.png',
 //                     width: width*0.4,
 //                     height: height*0.02,
 //                   ),

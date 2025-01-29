@@ -6,30 +6,26 @@ import 'package:intl/intl.dart';
 class MorePageController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Already existing reactive list for gallery
   var galleryDocIds = <String>[].obs;
 
-  // NEW: Reactive list for presentations
-
-  // Already existing method for gallery
   Future<void> fetchGalleryDocIds() async {
     try {
       final querySnapshot = await _firestore.collection('gallery').get();
-      galleryDocIds.value = querySnapshot.docs.map((doc) => doc.id).toList();
+      galleryDocIds.value = querySnapshot.docs
+          .map((doc) => doc.id)
+          .toList()
+        ..sort((a, b) => b.compareTo(a)); // Descending order
+
+
     } catch (e) {
       print("Error fetching gallery doc IDs: $e");
     }
   }
 
-  // NEW: Fetch presentation document IDs
-  // Future<void> fetchPresentationDocIds() async {
-  //   try {
-  //     final querySnapshot = await _firestore.collection('presentations').get();
-  //     presentationDocIds.value = querySnapshot.docs.map((doc) => doc.id).toList();
-  //   } catch (e) {
-  //     print("Error fetching presentation doc IDs: $e");
-  //   }
-  // }
+
+
+
+
 
   var presentationDocIds = <String>[].obs;
 

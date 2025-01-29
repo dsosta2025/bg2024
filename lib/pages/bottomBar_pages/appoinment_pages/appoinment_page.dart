@@ -701,7 +701,7 @@ class _AppoinmentPageState extends State<AppoinmentPage>
 //                     ),
 //                     SizedBox(height: 5.h),
 //                     Image.asset(
-//                       'lib/assets/Xsentinel.png',
+//                       'lib/assets/logo_bigGyan.png',
 //                       width: 66.w,
 //                       height: 23.h,
 //                     ),

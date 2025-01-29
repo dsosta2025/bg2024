@@ -68,15 +68,18 @@ class AboutScreen extends StatelessWidget {
                   size,
                   name: 'DR. N. RAVEENDRAN',
                   role: 'Principal Consultant | Xsentinel Pvt Ltd',
+                  imageUrl: "lib/assets/Rectangle 32.png",
                   description:
                       'Dr. Raveendran is a management graduate (UK) and obtained his Ph.D in the field of insurance. He is a certified risk manager and business continuity planner. He has about 5 years of experience in the field of advertising, 9 years in international marketing and 14 years of experience in insurance and risk management. He had created an assessment tool for assessing the capabilities in micro insurance interventions. This tool is currently included as one of the course curriculum in micro insurance institute, London. He has been awarded with many awards and accolades including "Innovation in insurance distribution" and gold star award for CSR achievements for the year 2013.',
                 ),
+                
                 SizedBox(height: size.height * 0.03),
                 _buildProfileCard(
                   context,
                   size,
                   name: 'MR. SURESH B',
                   role: 'Reinsurance Expert',
+                  imageUrl: "lib/assets/sursah.jpg",
                   description:
                       'Mr. Suresh Balakrishnan is working an independent as risk management and risk transfer advisor. He has been a specialist broker for liability and high value risks. He serves as guest faculty at the national insurance academy, Pune on liability insurance. His expertise includes largest directors and officers liability insurance and P&I insurance; single project professional indemnity policies including ports, airports and metro rail up to 12 year policy periods; FI, construction and technology domains. He worked as reinsurance broker handling both treaty and facultative reinsurance placements for a technology company for new India assurance.',
                 ),
@@ -94,6 +97,7 @@ class AboutScreen extends StatelessWidget {
     required String name,
     required String role,
     required String description,
+        required String imageUrl
   }) {
     return Container(
       padding: EdgeInsets.all(size.width * 0.04),
@@ -119,7 +123,7 @@ class AboutScreen extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(size.width * 0.065),
                     child: Image.asset(
-                      "lib/assets/Rectangle 32.png",
+                      imageUrl,
                       fit: BoxFit.cover,
                     ),
                   )),

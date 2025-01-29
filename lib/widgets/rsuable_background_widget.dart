@@ -99,13 +99,16 @@ class _ReusableBackGroundScreenState extends State<ReusableBackGroundScreen>
                             style: TextStyle(fontSize: width * 0.03)),
                         Container(
                           // color: Colors.red,
-                          child: Image.asset('lib/assets/Xsentinel.png',
+                          child: Image.asset('lib/assets/logo_bigGyan.png',
                               width: width * 0.15, height: height * 0.07),
                         ),
                       ],
                     ),
                   ],
                 ),
+
+
+
           SizedBox(height: height * 0.0403),
           Expanded(
             child: Container(
@@ -308,7 +311,7 @@ class _ReusableBackGroundScreenState extends State<ReusableBackGroundScreen>
 //                       children: [
 //                         Text("Powered by",
 //                             style: TextStyle(fontSize: width * 0.03)),
-//                         Image.asset('lib/assets/Xsentinel.png',
+//                         Image.asset('lib/assets/logo_bigGyan.png',
 //                             width: width * 0.4, height: height * 0.02),
 //                       ],
 //                     ),
@@ -490,7 +493,7 @@ class _ReusableBackGroundScreenState extends State<ReusableBackGroundScreen>
 //               Column(
 //                 children: [
 //                   Text("Powered by", style: TextStyle(fontSize: width * 0.03)),
-//                   Image.asset('lib/assets/Xsentinel.png', width: width * 0.4, height: height * 0.02),
+//                   Image.asset('lib/assets/logo_bigGyan.png', width: width * 0.4, height: height * 0.02),
 //                 ],
 //               ),
 //             ],

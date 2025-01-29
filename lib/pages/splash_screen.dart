@@ -147,7 +147,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       ),
                     ),
                     Image.asset(
-                      'lib/assets/Xsentinel.png',
+                      'lib/assets/logo_bigGyan.png',
                       width: 70.w,
                       height: 50.h,
                     ),
@@ -276,7 +276,7 @@ class _SplashScreenState extends State<SplashScreen> {
 //                     ),
 //                     const SizedBox(height: 10),
 //                     Image.asset(
-//                       'lib/assets/Xsentinel.png',
+//                       'lib/assets/logo_bigGyan.png',
 //                       width: 93.37,
 //                       height: 32.54,
 //                     ),

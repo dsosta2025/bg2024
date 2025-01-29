@@ -48,6 +48,8 @@ class SessionSpeakerCardP extends StatelessWidget {
                 ? Image.memory(
                     base64Decode(imageUrl),
                     fit: BoxFit.contain,
+              width: width*0.05,
+              height: width*0.05,
                   )
                 : Padding(
                     padding: EdgeInsets.symmetric(horizontal: width * 0.03),

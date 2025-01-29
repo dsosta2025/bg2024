@@ -91,8 +91,8 @@ class EventScreen extends StatelessWidget {
       padding: EdgeInsets.only(top: 50.h),
       child: Image.asset(
         'lib/assets/BG LOGO3.png',
-        height: 26.h,
-        width: 290.33.w,
+        height: 30.h,
+        width: 400.33.w,
       ),
     );
   }
@@ -106,8 +106,7 @@ class EventScreen extends StatelessWidget {
         children: [
           _buildSponsoredBy(
               'Sponsored by', 'lib/assets/Plus Logo.png', 69.82.w, 16.h),
-          SizedBox(width: 50.w),
-          _buildPowereByBy('Powered by', 'lib/assets/Xsentinel.png',
+          _buildPowereByBy('Powered by', 'lib/assets/logo_bigGyan.png',
               width * 0.15, height * 0.07),
         ],
       ),
@@ -355,7 +354,7 @@ class EventScreen extends StatelessWidget {
 //               'Sponsored by', 'lib/assets/Plus Logo.png', 69.82.w, 16.h),
 //           SizedBox(width: 50.w),
 //           _buildSponsoredBy(
-//               'Powered by', 'lib/assets/Xsentinel.png', 66.w, 23.h),
+//               'Powered by', 'lib/assets/logo_bigGyan.png', 66.w, 23.h),
 //         ],
 //       ),
 //     );

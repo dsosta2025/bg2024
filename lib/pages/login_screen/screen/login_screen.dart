@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(height: 50.h),
                     _buildLogo(),
                     SizedBox(height: 30.h),
-                    _buildLoginForm(),
+                    _buildLoginForm(height),
                   ],
                 ),
               ),
@@ -79,10 +79,12 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildLoginForm() {
+  Widget _buildLoginForm(double height) {
     return Container(
+      height: height,
       decoration: const BoxDecoration(
         color: Color.fromARGB(255, 249, 247, 247),
+
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(30),
           topLeft: Radius.circular(30),
@@ -326,7 +328,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           SizedBox(width: 10.w),
           Image.asset(
-            'lib/assets/Xsentinel.png',
+            'lib/assets/logo_bigGyan.png',
             width: 46.w,
             height: 48.h,
           ),

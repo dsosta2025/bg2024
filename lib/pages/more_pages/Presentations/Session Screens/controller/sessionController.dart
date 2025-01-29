@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
-
+import 'package:http/http.dart' as http;
 class Sessioncontroller extends GetxController{
 
   var sessions = <Session>[].obs;
@@ -55,54 +55,117 @@ class Sessioncontroller extends GetxController{
       isLoadingSessions.value = false;
     }
   }
+RxBool isLoading = false.obs;
 
-
-  Future<void> viewPDF(BuildContext context, String base64Pdf) async {
+  Future<void> viewPDF(BuildContext context, String pdfUrl) async {
     try {
-      // Decode the Base64 string
-      Uint8List pdfData = base64Decode(base64Pdf);
-
-      // Save the PDF to a temporary file
+      isLoading.value = true;
+      // Get temporary directory
       Directory tempDir = await getTemporaryDirectory();
       String filePath = '${tempDir.path}/temp_view.pdf';
-      File pdfFile = File(filePath);
-      await pdfFile.writeAsBytes(pdfData);
 
-      // Navigate to the PDF viewer screen
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => PDFViewerScreen(pdfPath: filePath),
-        ),
-      );
+      // Download the PDF file
+      var response = await http.get(Uri.parse(pdfUrl));
+
+      if (response.statusCode == 200) {
+        File pdfFile = File(filePath);
+        await pdfFile.writeAsBytes(response.bodyBytes);
+
+        // Navigate to the PDF viewer screen
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PDFViewerScreen(pdfPath: filePath),
+          ),
+        );
+      } else {
+        throw Exception("Failed to download PDF");
+      }
     } catch (e) {
       debugPrint("Error viewing PDF: $e");
       throw Exception("Failed to view PDF");
     }
+    finally
+        {
+          isLoading.value = false;
+        }
   }
-
-  Future<String> downloadPDF(String base64Pdf) async {
+  Future<String> downloadPDF(String pdfUrl) async {
     try {
-      // Decode the Base64 string to binary data
-      Uint8List pdfData = base64Decode(base64Pdf);
+      // Get external storage directory (for download)
+      Directory? downloadsDir = await getExternalStorageDirectory();
+      if (downloadsDir == null) {
+        throw Exception("Failed to access storage");
+      }
 
-      // Get the temporary directory
-      Directory tempDir = await getTemporaryDirectory();
+      // Define file path
+      String filePath = '${downloadsDir.path}/downloaded_pdf.pdf';
 
-      // Create a file path for the PDF
-      String filePath = '${tempDir.path}/downloaded_pdf.pdf';
+      // Download the PDF file
+      var response = await http.get(Uri.parse(pdfUrl));
 
-      // Write the binary data to the file
-      File pdfFile = File(filePath);
-      await pdfFile.writeAsBytes(pdfData);
+      if (response.statusCode == 200) {
+        File pdfFile = File(filePath);
+        await pdfFile.writeAsBytes(response.bodyBytes);
 
-
-      // Return the file path
-      return filePath;
+        return filePath; // Return the downloaded file path
+      } else {
+        throw Exception("Failed to download PDF");
+      }
     } catch (e) {
       debugPrint("Error downloading PDF: $e");
       throw Exception("Failed to download PDF");
     }
   }
+
+//
+  //
+  // Future<void> viewPDF(BuildContext context, String base64Pdf) async {
+  //   try {
+  //     // Decode the Base64 string
+  //     Uint8List pdfData = base64Decode(base64Pdf);
+  //
+  //     // Save the PDF to a temporary file
+  //     Directory tempDir = await getTemporaryDirectory();
+  //     String filePath = '${tempDir.path}/temp_view.pdf';
+  //     File pdfFile = File(filePath);
+  //     await pdfFile.writeAsBytes(pdfData);
+  //
+  //     // Navigate to the PDF viewer screen
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => PDFViewerScreen(pdfPath: filePath),
+  //       ),
+  //     );
+  //   } catch (e) {
+  //     debugPrint("Error viewing PDF: $e");
+  //     throw Exception("Failed to view PDF");
+  //   }
+  // }
+  //
+  // Future<String> downloadPDF(String base64Pdf) async {
+  //   try {
+  //     // Decode the Base64 string to binary data
+  //     Uint8List pdfData = base64Decode(base64Pdf);
+  //
+  //     // Get the temporary directory
+  //     Directory tempDir = await getTemporaryDirectory();
+  //
+  //     // Create a file path for the PDF
+  //     String filePath = '${tempDir.path}/downloaded_pdf.pdf';
+  //
+  //     // Write the binary data to the file
+  //     File pdfFile = File(filePath);
+  //     await pdfFile.writeAsBytes(pdfData);
+  //
+  //
+  //     // Return the file path
+  //     return filePath;
+  //   } catch (e) {
+  //     debugPrint("Error downloading PDF: $e");
+  //     throw Exception("Failed to download PDF");
+  //   }
+  // }
 
 }

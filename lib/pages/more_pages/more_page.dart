@@ -89,7 +89,7 @@ class _MorePageState extends State<MorePage> {
                         ),
                       ),
                       Image.asset(
-                        'lib/assets/Xsentinel.png',
+                        'lib/assets/logo_bigGyan.png',
                         width: 70.w,
                         height: 50.h,
                       ),

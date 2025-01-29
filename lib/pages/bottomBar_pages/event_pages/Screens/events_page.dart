@@ -81,7 +81,7 @@ class _EventsPageState extends State<EventsPage> {
                       ),
                     ),
                     Image.asset(
-                      'lib/assets/Xsentinel.png',
+                      'lib/assets/logo_bigGyan.png',
                       width: 70.w,
                       height: 50.h,
                     ),
@@ -309,7 +309,7 @@ class _EventsPageState extends State<EventsPage> {
 //                         ),
 //                         SizedBox(height: 10.h),
 //                         Image.asset(
-//                           'lib/assets/Xsentinel.png',
+//                           'lib/assets/logo_bigGyan.png',
 //                           width: 66.w,
 //                           height: 23.h,
 //                         ),

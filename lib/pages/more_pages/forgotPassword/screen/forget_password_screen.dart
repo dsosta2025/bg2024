@@ -294,7 +294,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
           ),
           SizedBox(width: 10.w),
           Image.asset(
-            'lib/assets/Xsentinel.png',
+            'lib/assets/logo_bigGyan.png',
             width: 46.w,
             height: 48.h,
           ),
@@ -580,7 +580,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
 //           ),
 //           SizedBox(width: 10.w),
 //           Image.asset(
-//             'lib/assets/Xsentinel.png',
+//             'lib/assets/logo_bigGyan.png',
 //             width: 46.w,
 //             height: 48.h,
 //           ),
